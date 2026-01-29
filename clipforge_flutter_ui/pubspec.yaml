@@ -1,0 +1,19 @@
+name: clipforge
+description: ClipForge UI prototype (offline on-device video processing)
+publish_to: "none"
+version: 0.1.0+1
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  google_fonts: ^6.2.1
+  intl: ^0.19.0
+  supabase_flutter: ^2.8.0
+  flutter_secure_storage: ^9.2.2
+
+flutter:
+  uses-material-design: true

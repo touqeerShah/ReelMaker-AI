@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReelMaker-AI Home Screen</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#2DD4BF", // Polished Teal (Teal-400)
+                        "primary-hover": "#14B8A6", // Teal-500
+                        "background-dark": "#0F1115", // Deep Charcoal
+                        "surface-dark": "#181B21", // Lighter Charcoal
+                        "surface-hover": "#22262E",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"],
+                        "body": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "0.75rem", "xl": "1rem", "2xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {background-image: radial-gradient(circle at 50% 0%, #1a2c38 0%, #0F1115 60%);
+            background-attachment: fixed;
+            min-height: 100dvh;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-dark font-body text-white antialiased selection:bg-primary/30 selection:text-white">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-28">
+<header class="sticky top-0 z-40 bg-background-dark/80 backdrop-blur-xl border-b border-white/5">
+<div class="flex items-center justify-between px-5 py-4 pt-safe-top">
+<div class="flex items-center gap-3">
+<div class="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 text-primary border border-primary/20 shadow-[0_0_15px_-3px_rgba(45,212,191,0.3)]">
+<span class="material-symbols-outlined text-[20px]">movie_filter</span>
+</div>
+<h1 class="text-lg font-bold tracking-tight text-white font-display">ReelMaker-AI</h1>
+</div>
+<div class="flex items-center gap-2 rounded-full bg-white/5 px-3 py-1.5 border border-white/5 shadow-inner shadow-white/5">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+<p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest">Models Ready</p>
+</div>
+</div>
+<div class="px-5 pb-4">
+<div class="flex items-center justify-between rounded-xl bg-surface-dark/40 border border-white/5 px-4 py-2.5 backdrop-blur-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">sd_storage</span>
+<p class="text-slate-300 text-xs font-medium tracking-wide">On-device Storage</p>
+</div>
+<div class="flex items-center gap-2">
+<div class="h-1.5 w-16 rounded-full bg-white/10 overflow-hidden">
+<div class="h-full w-[35%] rounded-full bg-primary/70"></div>
+</div>
+<p class="text-primary text-xs font-bold tracking-wide">5.2GB used</p>
+</div>
+</div>
+</div>
+</header>
+<div class="px-5 pt-6 pb-4">
+<h2 class="text-2xl font-bold tracking-tight text-white/90 font-display">Creator Studio</h2>
+<p class="text-slate-400 text-sm font-medium">Select an AI workflow to begin</p>
+</div>
+<div class="flex flex-col gap-5 px-5">
+<button class="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-white/5 bg-surface-dark transition-all duration-300 active:scale-[0.98] hover:border-primary/30">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-surface-dark/90 to-surface-dark z-10"></div>
+<div class="h-36 w-full bg-cover bg-center opacity-60 mix-blend-overlay transition-opacity duration-500 group-hover:opacity-80" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBXyNTeIZ-YabYn2HFrXBGtahNZoxMqo9ToVcoSbnblqED9vWeA6tEwmnNOVvFd8kDXFrXDVwC8vgn5BBELA79e7YsrGFKjltlrUWNLWhp-dtHvvgbt6OzTP5_QsVaD4ME5YVH-E_VbaPOtInXSpuEK71-mqk_XmjwuF2eN5WdklCataylpjtNqO6an0NylSbqgNG_xE1Y97GtU-REeVBabD1VM7oY64r6qzAiwyHXBKXRb-r5GtIBL6di2kdWd5RHUAnhQpnhCcPl4");'></div>
+<div class="relative z-20 flex w-full items-end justify-between p-5 -mt-2">
+<div class="flex flex-col items-start gap-1 pr-4">
+<div class="mb-2 rounded-lg bg-primary/10 p-2 text-primary ring-1 ring-inset ring-primary/20 backdrop-blur-md">
+<span class="material-symbols-outlined block text-xl">auto_videocam</span>
+</div>
+<h3 class="text-lg font-bold text-white tracking-tight font-display">Create Shorts</h3>
+<p class="text-left text-xs font-medium text-slate-400 leading-relaxed">Turn long podcasts into viral clips automatically.</p>
+</div>
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-surface-dark shadow-[0_0_20px_rgba(255,255,255,0.2)] group-hover:scale-110 group-hover:bg-primary group-hover:text-surface-dark transition-all duration-300">
+<span class="material-symbols-outlined text-xl">arrow_forward</span>
+</div>
+</div>
+</button>
+<button class="group relative flex w-full flex-col overflow-hidden rounded-2xl border border-white/5 bg-surface-dark transition-all duration-300 active:scale-[0.98] hover:border-white/20">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent via-surface-dark/90 to-surface-dark z-10"></div>
+<div class="h-36 w-full bg-cover bg-center opacity-60 mix-blend-overlay transition-opacity duration-500 group-hover:opacity-80" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCYnw76x5PyVFE8-Aed_JpImYLzuxXhZPtVWaPmumcp1DhNUapuVM_kFwIOQYlyWMkKXQa4IlYi1ALPmOlherCJnBWwxqYpxbDj_l83I1LNS3bC2IaA2yMdwOmJmEQAnEuL_q2VdvLuLcSAzy4w3Q9otLFDoUo_Rsqzi-DvDW2iLcNogqgRpQhJPceqJruCeCtipelhSuMC_2f6_VMU5MjfV4i_ookmt1uYuyQruDMFv4EouWa0tntzj-roBV9Jk6UL-4JSUP7Ya9zF");'></div>
+<div class="relative z-20 flex w-full items-end justify-between p-5 -mt-2">
+<div class="flex flex-col items-start gap-1 pr-4">
+<div class="mb-2 rounded-lg bg-white/5 p-2 text-white ring-1 ring-inset ring-white/10 backdrop-blur-md">
+<span class="material-symbols-outlined block text-xl">summarize</span>
+</div>
+<h3 class="text-lg font-bold text-white tracking-tight font-display">Summary Video</h3>
+<p class="text-left text-xs font-medium text-slate-400 leading-relaxed">Condense hours of meeting footage into minutes.</p>
+</div>
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-sm group-hover:bg-white group-hover:text-surface-dark transition-all duration-300">
+<span class="material-symbols-outlined text-xl">play_arrow</span>
+</div>
+</div>
+</button>
+</div>
+<div class="mt-8 px-5">
+<div class="flex items-center justify-between mb-5">
+<h3 class="text-xs font-bold uppercase tracking-widest text-slate-500">Recent Projects</h3>
+<button class="text-primary text-xs font-bold hover:text-primary-hover tracking-wide transition-colors">View All</button>
+</div>
+<div class="flex flex-col gap-3">
+<div class="group flex items-center gap-4 rounded-xl border border-white/5 bg-surface-dark/40 p-2 pr-4 transition-colors hover:bg-surface-dark hover:border-white/10">
+<div class="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg border border-white/5">
+<div class="absolute inset-0 bg-cover bg-center opacity-70" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCI_jVvoiqe5oVjYDJkrT8kiIFw3e1p5HEUEUXFgZ8MDZZFr6cCi_KmFMsrJT8IxwXzbcWy2ofoJpEw_pIRQA-wh8bFAsbQ6tl15bFKLAwoNT2LAtGPv5VqwtVxPINrIHG_ZIWccelom79TtatOcj3B133P-samh-jtjt6qt0ESW1ISc57z7mWHKwLRCPluwAYntw0XfFaxGKrw8vflrPTOxPFCaJutrgcCjnotwcJuMQuM1xURHRMLLcdBo2dDqGJu0qXUE3RtZ_tX");'></div>
+<div class="absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-[1px]">
+<div class="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent shadow-[0_0_10px_rgba(45,212,191,0.4)]"></div>
+</div>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<h4 class="text-sm font-semibold text-white tracking-tight truncate font-display">Quarterly_Review.mov</h4>
+<div class="flex items-center gap-2">
+<div class="h-1 w-16 bg-white/10 rounded-full overflow-hidden">
+<div class="h-full w-[45%] bg-amber-400 rounded-full"></div>
+</div>
+<p class="text-[10px] text-amber-400 font-mono">45%</p>
+</div>
+</div>
+<div class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-400/10 px-2 py-1 rounded border border-amber-400/20">Processing</div>
+</div>
+<div class="group flex items-center gap-4 rounded-xl border border-white/5 bg-surface-dark/40 p-2 pr-4 transition-colors hover:bg-surface-dark hover:border-white/10">
+<div class="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg border border-white/5">
+<div class="absolute inset-0 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuByWeIFNAEYqBSqgoW1uXXDzTBqLrZG4U1LYz-SXz3_sI2B0hsFRjuF4EQOm35WtKB0CfHQtUUIeHn2_1r1bhpRb12oekJSehUg0DKExR70A2UXTqD_Q85gmF3ucEfQeLe2OVX1MpNDqMMCvqgS-fiU9NSP_nUcFZ0kqr-WkPtMVtQsQhppwCmo6bjmvS7zjYplEio46qCtfz2zwdjLIX9DXDomabbPy7MRnxisd_4RB2QjFY7ls0sqwP2e3TvhF6TkfjisxXpeb8IQ");'></div>
+<div class="absolute bottom-1 right-1 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold text-white font-mono backdrop-blur-sm">12:04</div>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-0.5">
+<h4 class="text-sm font-semibold text-white tracking-tight truncate font-display">Podcast_Ep4.mp4</h4>
+<p class="text-xs text-slate-500 font-medium">2 hours ago</p>
+</div>
+<div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">
+<span class="material-symbols-outlined text-[12px]">check</span> Ready
+                 </div>
+</div>
+<div class="group flex items-center gap-4 rounded-xl border border-white/5 bg-surface-dark/40 p-2 pr-4 transition-colors hover:bg-surface-dark hover:border-white/10">
+<div class="relative h-14 w-20 shrink-0 overflow-hidden rounded-lg border border-white/5">
+<div class="absolute inset-0 bg-cover bg-center" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCPM7yARJjEkH6VvHuS6dMxrILY4lJcvmbekfGa13seJbud3E8Pjbqj1Kz8TI9IW8c4NVytsNWJSMe-SKbugsmW9RoVach2fC3WZnqmrusMRsQSL8U_vNJC8zQKZ43QPWxIXT6yYbj1u0w_mqE1u8a_UyCvmvOuhCOLhb0u0HfeUlfihbZ8cl2aynuZGcVoMwJ9vHi-oQDPBhg6SORbCEw-bUVQuqVqwDreFOwvbahsPUJodQJDy79AJWLTGWZcyTmgDZuCEHD3N4Qg");'></div>
+<div class="absolute bottom-1 right-1 rounded bg-black/70 px-1 py-0.5 text-[9px] font-bold text-white font-mono backdrop-blur-sm">03:45</div>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-0.5">
+<h4 class="text-sm font-semibold text-white tracking-tight truncate font-display">Trip_Vlog.mp4</h4>
+<p class="text-xs text-slate-500 font-medium">Yesterday</p>
+</div>
+<div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">
+<span class="material-symbols-outlined text-[12px]">check</span> Ready
+                 </div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-6 right-6 z-50">
+<button class="flex h-14 items-center gap-3 rounded-full bg-gradient-to-r from-primary-hover to-primary pl-5 pr-6 text-background-dark shadow-xl shadow-primary/25 transition-transform active:scale-95 hover:shadow-primary/40 hover:brightness-110">
+<span class="material-symbols-outlined text-2xl">add</span>
+<span class="font-bold text-sm tracking-wide">Import Video</span>
+</button>
+</div>
+<div class="fixed bottom-0 left-0 w-full h-24 bg-gradient-to-t from-background-dark via-background-dark/90 to-transparent pointer-events-none z-40"></div>
+</div>
+
+</body></html>

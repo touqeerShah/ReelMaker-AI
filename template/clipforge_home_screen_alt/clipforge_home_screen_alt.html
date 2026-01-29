@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ClipForge Home Screen</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13c8ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101f22",
+                        "surface-dark": "#16282c",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem", 
+                        "xl": "1.5rem", 
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary selection:text-background-dark">
+<div class="relative flex min-h-screen flex-col overflow-hidden pb-[90px]">
+<!-- Header -->
+<header class="sticky top-0 z-20 flex items-center justify-between p-4 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-transparent dark:border-white/5">
+<div class="flex items-center gap-3">
+<div class="flex items-center justify-center size-10 rounded-xl bg-gradient-to-br from-primary to-blue-600 text-black shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-white" style="font-size: 24px;">movie_filter</span>
+</div>
+<h1 class="text-xl font-bold tracking-tight">ClipForge</h1>
+</div>
+<button class="flex items-center justify-center size-10 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-300">notifications</span>
+</button>
+</header>
+<!-- Main Content -->
+<main class="flex flex-col gap-6 p-4">
+<!-- Storage Metrics Widget -->
+<section class="rounded-2xl bg-surface-light dark:bg-surface-dark p-5 shadow-sm border border-slate-200 dark:border-white/5">
+<div class="flex justify-between items-center mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm">hard_drive</span>
+<h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Device Storage</h2>
+</div>
+<span class="text-xs font-medium px-2 py-1 rounded bg-primary/10 text-primary border border-primary/20">AI Core: Ready</span>
+</div>
+<div class="relative h-4 w-full rounded-full bg-slate-100 dark:bg-black/40 overflow-hidden">
+<div class="absolute top-0 left-0 h-full bg-primary rounded-full" style="width: 72%"></div>
+<!-- Gradient overlay for "cyber" feel -->
+<div class="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white/10 to-transparent opacity-30"></div>
+</div>
+<div class="flex justify-between mt-3 text-sm">
+<span class="font-medium">Used: 115 GB</span>
+<span class="text-slate-500 dark:text-slate-400">45 GB Free</span>
+</div>
+</section>
+<!-- Action Hub (Grid) -->
+<section class="grid grid-cols-2 gap-4">
+<!-- Shorts Factory Card -->
+<div class="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 shadow-sm aspect-[4/5] cursor-pointer">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-50 transition-opacity duration-500" data-alt="Abstract fluid blue and cyan neon waves" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAgOTz2NDu5XKym3N52EtIEeySecx0a3puGD3p2bQ118Y4cujOFbwNrupW5tYYG7IsxvIgfQyJ9cX3sGphoBQhW8jChBIyRqa_l_FfpiqbKsQP-yRZwbtOs-BlaqhnMhRuSiCnm5hdWsa2EXbRbpC45SSwItgOhNn0LQEE7DRbbLHK_KQ5TctizOy7X0wXhRGdetb_79htmH-Fu4GDbKkMqcb-7xefy8Dj4Lv68pVSZpJXbkOPPKaTF0mqh5Syw_421O9U1J8DDZHa7');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/60 to-transparent"></div>
+<div class="relative z-10 p-4 pt-5">
+<div class="size-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mb-2 border border-white/10">
+<span class="material-symbols-outlined text-primary">crop_portrait</span>
+</div>
+<h3 class="text-lg font-bold leading-tight text-white">Shorts Factory</h3>
+</div>
+<div class="relative z-10 p-4 pt-0">
+<p class="text-xs text-slate-300 mb-4 line-clamp-2">Turn long videos into viral vertical clips.</p>
+<button class="w-full h-9 rounded-lg bg-primary hover:bg-cyan-400 text-background-dark text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-colors shadow-[0_0_15px_-3px_rgba(19,200,236,0.4)]">
+<span>Start</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Highlights Card -->
+<div class="group relative flex flex-col justify-between overflow-hidden rounded-2xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 shadow-sm aspect-[4/5] cursor-pointer">
+<div class="absolute inset-0 bg-cover bg-center opacity-40 group-hover:opacity-50 transition-opacity duration-500" data-alt="Cyberpunk style abstract geometric shapes and lights" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQim_PPFkPaiCPT5XiN2kQHNC_5m3n0mvrHvpJdPCw0Uk0iKaj8mW667fNRXLhMcPN8sd0W9hs9t-dI0ZvT0MlX7QvfMv0dAJUroT4uJ5RgSiYjjrtPLlI6RRVFgGJHo5gov-eVdwxDv_uoA0vgc-gTzPY7MyZmtH-lSlB7dD1HDwbnh4Ft12JUZuxnyOL9piAJpC6oLoaIBNbWhx09hdpWppYXrWywiDN3vPlI2dCzoun1aOTjpLgNJ9I8m57hXbp31H5x33EjGv7');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background-dark via-background-dark/60 to-transparent"></div>
+<div class="relative z-10 p-4 pt-5">
+<div class="size-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mb-2 border border-white/10">
+<span class="material-symbols-outlined text-primary">auto_fix_high</span>
+</div>
+<h3 class="text-lg font-bold leading-tight text-white">Highlights</h3>
+</div>
+<div class="relative z-10 p-4 pt-0">
+<p class="text-xs text-slate-300 mb-4 line-clamp-2">Extract key moments and create summaries.</p>
+<button class="w-full h-9 rounded-lg bg-surface-dark/80 hover:bg-surface-dark text-primary border border-primary/30 text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-1 transition-colors backdrop-blur-sm">
+<span>Analyze</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Recent Projects -->
+<section>
+<div class="flex items-center justify-between mb-4 px-1">
+<h3 class="text-lg font-bold">Recent Projects</h3>
+<button class="text-primary text-sm font-medium hover:text-cyan-300">View All</button>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Project Item 1: Ready -->
+<div class="flex items-center gap-4 p-3 rounded-xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 active:scale-[0.99] transition-transform cursor-pointer">
+<div class="relative h-[64px] w-[88px] shrink-0 overflow-hidden rounded-lg bg-slate-800">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Podcast recording studio with microphone" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBglnqnReKPvvkGhVEWIP7WgTn-tau0FP_kVJHkbZe_NR058eTASIv2DT8UKeOj2hAm-icvMtkCAAoQcFU6vYTEoi-rWmkd85vZR5MAOND6LF_mZ--78pFVuPvslP5n9y2f4myG6y4kyTkQi_0wxcV8wI_viRDjftcCPaiReGOKlR83XLP7ZRi1GRV9xXUPkGeMCyy1StVdk2TYs97uHXKhAhJ3OuSkjAEA_W5Gh-W9G561YdS_lT35Pq62Ad0eyM2qrF9spS6KqNRw');"></div>
+<div class="absolute bottom-1 right-1 px-1 py-0.5 rounded bg-black/70 text-[10px] font-bold text-white">45s</div>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<h4 class="text-base font-semibold leading-tight text-slate-900 dark:text-white line-clamp-1">Podcast Ep 42</h4>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[14px]">schedule</span>
+<span>20m → 45s</span>
+</div>
+</div>
+<div class="shrink-0 flex items-center justify-center size-8 rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined" style="font-size: 20px;">check_circle</span>
+</div>
+</div>
+<!-- Project Item 2: Processing -->
+<div class="flex items-center gap-4 p-3 rounded-xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 active:scale-[0.99] transition-transform cursor-pointer">
+<div class="relative h-[64px] w-[88px] shrink-0 overflow-hidden rounded-lg bg-slate-800">
+<div class="absolute inset-0 bg-cover bg-center opacity-50" data-alt="Gaming setup with neon lights and monitors" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAT39cq6Wo3a7CqxrNXUQHL51fuqSdPIQwQnU5OEo1mayXuVLCFOKF_59Dz1F9AhGso61uRNj8g1HKXFCO7Rbn1sUaf6GrNxnYml3QJ_hf0y4VML_hY5pYAh4xIu2vvfT2nDW2pH8kCSpR0GVvXcxjggMIlm4eXfuMlDJb3Fi-d6iNISUA071kfW7or75S6Nh0niMpjigSN8bhdRV9HEVPDB20CsxhRExjfluJzd8_JQuzTUckQaYc5yGi-eNktN7_rhWHBhQMnxiQ3');"></div>
+<div class="absolute inset-0 flex items-center justify-center bg-black/20">
+<span class="material-symbols-outlined text-white animate-spin">progress_activity</span>
+</div>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<h4 class="text-base font-semibold leading-tight text-slate-900 dark:text-white line-clamp-1">Gaming Stream</h4>
+<div class="w-full h-1.5 bg-slate-200 dark:bg-black/40 rounded-full overflow-hidden">
+<div class="h-full bg-primary animate-pulse w-[30%]"></div>
+</div>
+<span class="text-xs text-primary font-medium">Processing 30%</span>
+</div>
+</div>
+<!-- Project Item 3: Draft -->
+<div class="flex items-center gap-4 p-3 rounded-xl bg-surface-light dark:bg-surface-dark border border-slate-200 dark:border-white/5 active:scale-[0.99] transition-transform cursor-pointer">
+<div class="relative h-[64px] w-[88px] shrink-0 overflow-hidden rounded-lg bg-slate-800">
+<div class="absolute inset-0 bg-cover bg-center grayscale" data-alt="Mountain landscape view from a vlog camera" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCLKfxQl-2eznLRs7PcIrGK07H8BqXPlJ-kFS50jqeFcnnLi5N9PHR95uqCOpYpJzUM5dj3iIGcto94FTlaA6QLx179UWI1pBmF6iZdTHmtULNsIzkj4JCcv51fjKDRcOPRk1UrX45KrpxKe4h0n-CbtlSCKQKkqnhH0opf-6OJ2QiU_bDf7cHtAhYqQhdapma05GwPupvmKWn4tDu6EZKSOYmwVJsDPgkQX77mUKy4dIZCFWQZZYsBD--rWp5T3o9jbkc8zBU90Pc0');"></div>
+<div class="absolute bottom-1 right-1 px-1 py-0.5 rounded bg-black/70 text-[10px] font-bold text-white">12m</div>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<h4 class="text-base font-semibold leading-tight text-slate-900 dark:text-white line-clamp-1">Vlog Raw Footage</h4>
+<div class="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[14px]">edit_note</span>
+<span>Draft • 2h ago</span>
+</div>
+</div>
+<div class="shrink-0 flex items-center justify-center size-8">
+<span class="material-symbols-outlined text-slate-500" style="font-size: 20px;">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-background-light/80 dark:bg-background-dark/90 backdrop-blur-xl border-t border-slate-200 dark:border-white/5 pb-5 pt-3 px-6">
+<div class="flex justify-around items-center">
+<button class="flex flex-col items-center gap-1 text-primary group">
+<div class="relative p-1 rounded-xl transition-all group-hover:bg-primary/10">
+<span class="material-symbols-outlined icon-filled" style="font-size: 26px;">home</span>
+<span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-primary"></span>
+</div>
+<span class="text-[10px] font-bold tracking-wide">Home</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors group">
+<div class="relative p-1 rounded-xl transition-all group-hover:bg-white/5">
+<span class="material-symbols-outlined" style="font-size: 26px;">video_library</span>
+</div>
+<span class="text-[10px] font-medium tracking-wide">Library</span>
+</button>
+<!-- Floating center action button (optional visual flair) -->
+<button class="flex items-center justify-center size-12 rounded-full bg-gradient-to-tr from-surface-dark to-slate-800 border border-white/10 text-white shadow-lg -mt-6 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors group">
+<div class="relative p-1 rounded-xl transition-all group-hover:bg-white/5">
+<span class="material-symbols-outlined" style="font-size: 26px;">analytics</span>
+</div>
+<span class="text-[10px] font-medium tracking-wide">Stats</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors group">
+<div class="relative p-1 rounded-xl transition-all group-hover:bg-white/5">
+<span class="material-symbols-outlined" style="font-size: 26px;">settings</span>
+</div>
+<span class="text-[10px] font-medium tracking-wide">Settings</span>
+</button>
+</div>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Shorts Wizard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13c8ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101f22",
+                        "surface-dark": "#1a2c30",
+                        "surface-border": "#2a3e42",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased selection:bg-primary/30">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-hidden mx-auto max-w-md shadow-2xl">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-20 flex items-center bg-background-light dark:bg-background-dark p-4 pb-2 justify-between border-b border-transparent dark:border-white/5 backdrop-blur-md bg-opacity-90 dark:bg-opacity-90">
+<button class="text-slate-900 dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Create Shorts</h2>
+</header>
+<!-- Progress Stepper -->
+<div class="w-full bg-background-light dark:bg-background-dark px-6 py-4">
+<div class="flex items-center justify-between mb-2">
+<span class="text-xs font-semibold text-primary uppercase tracking-wider">Step 4 of 7</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Translation</span>
+</div>
+<div class="flex w-full flex-row items-center justify-between gap-1.5 h-1.5">
+<!-- Completed steps -->
+<div class="h-full flex-1 rounded-full bg-primary"></div>
+<div class="h-full flex-1 rounded-full bg-primary"></div>
+<div class="h-full flex-1 rounded-full bg-primary"></div>
+<!-- Current step -->
+<div class="h-full flex-1 rounded-full bg-white dark:bg-white animate-pulse"></div>
+<!-- Future steps -->
+<div class="h-full flex-1 rounded-full bg-slate-300 dark:bg-surface-border"></div>
+<div class="h-full flex-1 rounded-full bg-slate-300 dark:bg-surface-border"></div>
+<div class="h-full flex-1 rounded-full bg-slate-300 dark:bg-surface-border"></div>
+</div>
+</div>
+<!-- Scrollable Content -->
+<main class="flex-1 overflow-y-auto no-scrollbar pb-32">
+<!-- Headline Text -->
+<div class="px-6 pt-2 pb-2">
+<h1 class="text-slate-900 dark:text-white text-3xl font-bold leading-tight tracking-tight">Translation &amp; Languages</h1>
+<p class="text-slate-500 dark:text-slate-400 text-base font-normal leading-relaxed mt-2">
+                    Choose source and target languages for your generated shorts.
+                </p>
+</div>
+<!-- Source Language Section -->
+<div class="px-4 py-4 space-y-4">
+<div class="rounded-xl border border-slate-200 dark:border-surface-border bg-white dark:bg-surface-dark p-5 shadow-sm">
+<!-- Toggle Row -->
+<div class="flex items-center justify-between gap-4 mb-4">
+<div class="flex flex-col gap-1">
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">graphic_eq</span>
+                                Auto-Detect Source
+                            </p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal">Identify spoken language</p>
+</div>
+<label class="relative flex h-[28px] w-[48px] cursor-pointer items-center rounded-full border-none bg-slate-300 dark:bg-surface-border p-1 transition-colors has-[:checked]:bg-primary">
+<input checked="" class="peer invisible absolute" type="checkbox"/>
+<div class="h-[20px] w-[20px] rounded-full bg-white shadow-sm transition-all peer-checked:translate-x-[20px]"></div>
+</label>
+</div>
+<!-- Divider -->
+<div class="h-px w-full bg-slate-100 dark:bg-white/5 my-4"></div>
+<!-- Manual Override Dropdown (Visual representation) -->
+<div class="relative opacity-50 pointer-events-none grayscale group">
+<label class="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-1.5 block">Manual Override</label>
+<div class="flex items-center justify-between bg-slate-100 dark:bg-black/20 rounded-lg px-4 py-3 border border-transparent">
+<span class="text-slate-500 dark:text-slate-300 font-medium">English (United States)</span>
+<span class="material-symbols-outlined text-slate-400">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Target Languages Section -->
+<div class="px-4 pb-6">
+<div class="flex items-end justify-between px-2 mb-3">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold">Target Languages</h3>
+<button class="text-sm font-semibold text-primary hover:text-primary/80">Select All</button>
+</div>
+<!-- Search Bar -->
+<div class="relative mb-4">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400">search</span>
+<input class="w-full bg-white dark:bg-surface-dark border border-slate-200 dark:border-surface-border rounded-xl py-3.5 pl-11 pr-4 text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="Search languages..." type="text"/>
+</div>
+<!-- Languages Grid -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Hindi (Selected) -->
+<label class="cursor-pointer group relative">
+<input checked="" class="peer sr-only" type="checkbox"/>
+<div class="flex items-center gap-3 p-3 rounded-xl border border-primary bg-primary/10 dark:bg-primary/20 transition-all peer-checked:border-primary peer-checked:bg-primary/10 hover:bg-slate-50 dark:hover:bg-surface-dark">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary font-bold text-sm">HI</div>
+<div class="flex-1">
+<p class="font-bold text-slate-900 dark:text-white text-sm">Hindi</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Native</p>
+</div>
+<div class="size-5 rounded-full bg-primary flex items-center justify-center text-black">
+<span class="material-symbols-outlined text-[14px] font-bold">check</span>
+</div>
+</div>
+</label>
+<!-- Urdu (Selected) -->
+<label class="cursor-pointer group relative">
+<input checked="" class="peer sr-only" type="checkbox"/>
+<div class="flex items-center gap-3 p-3 rounded-xl border border-primary bg-primary/10 dark:bg-primary/20 transition-all peer-checked:border-primary peer-checked:bg-primary/10 hover:bg-slate-50 dark:hover:bg-surface-dark">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-primary font-bold text-sm">UR</div>
+<div class="flex-1">
+<p class="font-bold text-slate-900 dark:text-white text-sm">Urdu</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Native</p>
+</div>
+<div class="size-5 rounded-full bg-primary flex items-center justify-center text-black">
+<span class="material-symbols-outlined text-[14px] font-bold">check</span>
+</div>
+</div>
+</label>
+<!-- Spanish -->
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" type="checkbox"/>
+<div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-surface-border bg-white dark:bg-surface-dark transition-all peer-checked:border-primary peer-checked:bg-primary/10 hover:border-slate-300 dark:hover:border-slate-600">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-300 font-bold text-sm">ES</div>
+<div class="flex-1">
+<p class="font-bold text-slate-900 dark:text-white text-sm">Spanish</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Latin Am.</p>
+</div>
+<div class="size-5 rounded-full border border-slate-300 dark:border-slate-600 peer-checked:bg-primary peer-checked:border-primary flex items-center justify-center text-black transition-colors">
+</div>
+</div>
+</label>
+<!-- French -->
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" type="checkbox"/>
+<div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-surface-border bg-white dark:bg-surface-dark transition-all peer-checked:border-primary peer-checked:bg-primary/10 hover:border-slate-300 dark:hover:border-slate-600">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-300 font-bold text-sm">FR</div>
+<div class="flex-1">
+<p class="font-bold text-slate-900 dark:text-white text-sm">French</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">France</p>
+</div>
+<div class="size-5 rounded-full border border-slate-300 dark:border-slate-600 peer-checked:bg-primary peer-checked:border-primary flex items-center justify-center text-black transition-colors">
+</div>
+</div>
+</label>
+<!-- German -->
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" type="checkbox"/>
+<div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-surface-border bg-white dark:bg-surface-dark transition-all peer-checked:border-primary peer-checked:bg-primary/10 hover:border-slate-300 dark:hover:border-slate-600">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-300 font-bold text-sm">DE</div>
+<div class="flex-1">
+<p class="font-bold text-slate-900 dark:text-white text-sm">German</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Standard</p>
+</div>
+<div class="size-5 rounded-full border border-slate-300 dark:border-slate-600 peer-checked:bg-primary peer-checked:border-primary flex items-center justify-center text-black transition-colors">
+</div>
+</div>
+</label>
+<!-- Japanese -->
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" type="checkbox"/>
+<div class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 dark:border-surface-border bg-white dark:bg-surface-dark transition-all peer-checked:border-primary peer-checked:bg-primary/10 hover:border-slate-300 dark:hover:border-slate-600">
+<div class="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-300 font-bold text-sm">JA</div>
+<div class="flex-1">
+<p class="font-bold text-slate-900 dark:text-white text-sm">Japanese</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Standard</p>
+</div>
+<div class="size-5 rounded-full border border-slate-300 dark:border-slate-600 peer-checked:bg-primary peer-checked:border-primary flex items-center justify-center text-black transition-colors">
+</div>
+</div>
+</label>
+</div>
+</div>
+<div class="h-20"></div> <!-- Spacer for Sticky Footer -->
+</main>
+<!-- Sticky Bottom Actions -->
+<div class="absolute bottom-0 left-0 w-full p-4 bg-background-light dark:bg-background-dark/80 backdrop-blur-lg border-t border-slate-200 dark:border-white/5">
+<div class="flex items-center gap-4">
+<button class="flex-1 h-14 rounded-full border border-slate-300 dark:border-slate-600 bg-transparent text-slate-900 dark:text-white font-bold text-base hover:bg-slate-100 dark:hover:bg-white/5 transition-colors">
+                    Back
+                </button>
+<button class="flex-[2] h-14 rounded-full bg-primary text-slate-900 font-bold text-base shadow-[0_0_20px_rgba(19,200,236,0.3)] hover:bg-primary/90 transition-colors flex items-center justify-center gap-2">
+                    Next Step
+                    <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReelMaker-AI - Configure Summary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13c8ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101f22",
+                        "surface-dark": "#16282c",
+                        "surface-highlight": "#1e3236"
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar hiding for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased selection:bg-primary selection:text-black">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark border-x border-white/5">
+<!-- TopAppBar -->
+<div class="sticky top-0 z-50 flex items-center bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md p-4 pb-2 justify-between border-b border-white/5">
+<div class="text-slate-900 dark:text-white flex size-12 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/5 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-12">Configure Summary</h2>
+</div>
+<!-- PageIndicators -->
+<div class="flex w-full flex-col items-center justify-center py-4 bg-background-light dark:bg-background-dark">
+<div class="flex items-center gap-2">
+<!-- Step 1 Done -->
+<div class="h-1.5 w-6 rounded-full bg-primary/40"></div>
+<!-- Step 2 Active -->
+<div class="h-1.5 w-6 rounded-full bg-primary"></div>
+<!-- Step 3 Pending -->
+<div class="h-1.5 w-6 rounded-full bg-slate-300 dark:bg-surface-highlight"></div>
+</div>
+<p class="text-xs font-medium text-slate-500 dark:text-slate-400 mt-2 tracking-wide uppercase">Step 2 of 3</p>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 flex flex-col pb-24">
+<!-- HeadlineText -->
+<div class="px-5 pt-2">
+<h1 class="text-slate-900 dark:text-white tracking-tight text-[32px] font-bold leading-tight text-left">
+                    Tailor Your Reel
+                </h1>
+</div>
+<!-- BodyText -->
+<div class="px-5 pt-2 pb-4">
+<p class="text-slate-600 dark:text-slate-400 text-base font-normal leading-relaxed">
+                    Choose the duration and narrative style for your highlight video. AI will adapt the pacing accordingly.
+                </p>
+</div>
+<!-- Section 1: Target Duration -->
+<div class="pt-4">
+<!-- SectionHeader -->
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight px-5 pb-4">
+                    Target Duration
+                </h3>
+<!-- Duration Chips -->
+<div class="px-5 flex items-center gap-3 overflow-x-auto no-scrollbar">
+<!-- Option 1 -->
+<button class="flex flex-col items-center justify-center gap-1 rounded-2xl border border-slate-200 dark:border-surface-highlight bg-white dark:bg-surface-dark px-6 py-4 flex-1 min-w-[100px] hover:border-primary/50 transition-all group">
+<span class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">10</span>
+<span class="text-xs font-medium text-slate-500 uppercase tracking-wide">Mins</span>
+</button>
+<!-- Option 2 (Selected) -->
+<button class="flex flex-col items-center justify-center gap-1 rounded-2xl border-2 border-primary bg-primary px-6 py-4 flex-1 min-w-[100px] shadow-[0_0_20px_rgba(19,200,236,0.3)] transform scale-105 transition-all">
+<span class="text-xl font-bold text-background-dark">15</span>
+<span class="text-xs font-bold text-background-dark/80 uppercase tracking-wide">Mins</span>
+</button>
+<!-- Option 3 -->
+<button class="flex flex-col items-center justify-center gap-1 rounded-2xl border border-slate-200 dark:border-surface-highlight bg-white dark:bg-surface-dark px-6 py-4 flex-1 min-w-[100px] hover:border-primary/50 transition-all group">
+<span class="text-xl font-bold text-slate-900 dark:text-white group-hover:text-primary transition-colors">20</span>
+<span class="text-xs font-medium text-slate-500 uppercase tracking-wide">Mins</span>
+</button>
+</div>
+<p class="px-5 pt-3 text-xs text-slate-500 dark:text-slate-500 text-center">Balanced length, ideal for detailed overviews.</p>
+</div>
+<!-- Section 2: Summary Style -->
+<div class="pt-8">
+<!-- SectionHeader -->
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight px-5 pb-4">
+                    Narrative Style
+                </h3>
+<div class="px-5 flex flex-col gap-4">
+<!-- Card 1: Bullet Summary -->
+<div class="relative group cursor-pointer">
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-surface-dark border border-slate-200 dark:border-surface-highlight hover:border-primary/50 transition-all">
+<div class="h-14 w-14 shrink-0 rounded-xl bg-slate-100 dark:bg-surface-highlight flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">format_list_bulleted</span>
+</div>
+<div class="flex-1">
+<h4 class="text-base font-bold text-slate-900 dark:text-white">Bullet Summary</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400 leading-tight mt-1">Quick hits and key facts extracted rapidly.</p>
+</div>
+<div class="h-5 w-5 rounded-full border-2 border-slate-300 dark:border-slate-600"></div>
+</div>
+</div>
+<!-- Card 2: Chapter Summary (Selected) -->
+<div class="relative cursor-pointer">
+<div class="absolute inset-0 bg-primary/10 rounded-2xl blur-sm"></div>
+<div class="relative flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-surface-dark border-2 border-primary transition-all">
+<div class="h-14 w-14 shrink-0 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[28px]">segment</span>
+</div>
+<div class="flex-1">
+<h4 class="text-base font-bold text-slate-900 dark:text-white text-primary">Chapter Summary</h4>
+<p class="text-sm text-slate-600 dark:text-slate-300 leading-tight mt-1">Structured video segments with clear titles.</p>
+</div>
+<div class="h-6 w-6 rounded-full bg-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-background-dark text-sm font-bold">check</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Story Summary -->
+<div class="relative group cursor-pointer">
+<div class="flex items-center gap-4 p-4 rounded-2xl bg-white dark:bg-surface-dark border border-slate-200 dark:border-surface-highlight hover:border-primary/50 transition-all">
+<div class="h-14 w-14 shrink-0 rounded-xl bg-slate-100 dark:bg-surface-highlight flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[28px]">auto_stories</span>
+</div>
+<div class="flex-1">
+<h4 class="text-base font-bold text-slate-900 dark:text-white">Story Summary</h4>
+<p class="text-sm text-slate-500 dark:text-slate-400 leading-tight mt-1">A flowing narrative arc with emotional peaks.</p>
+</div>
+<div class="h-5 w-5 rounded-full border-2 border-slate-300 dark:border-slate-600"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Spacer -->
+<div class="h-10"></div>
+</div>
+<!-- Bottom Actions Sticky -->
+<div class="fixed bottom-0 left-0 right-0 z-50 p-5 bg-gradient-to-t from-background-light via-background-light to-transparent dark:from-background-dark dark:via-background-dark dark:to-transparent pointer-events-none flex justify-center max-w-md mx-auto">
+<div class="w-full pointer-events-auto">
+<button class="w-full rounded-xl bg-primary h-14 flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(19,200,236,0.25)] hover:shadow-[0_4px_25px_rgba(19,200,236,0.4)] active:scale-[0.98] transition-all">
+<span class="text-background-dark text-base font-bold tracking-wide">Generate Summary</span>
+<span class="material-symbols-outlined text-background-dark">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

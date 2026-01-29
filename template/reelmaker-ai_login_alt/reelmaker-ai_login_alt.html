@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReelMaker-AI Login Alt</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13c8ec",
+              "background-light": "#f6f8f8",
+              "background-dark": "#101f22",
+            },
+            fontFamily: {
+              "display": ["Spline Sans", "Noto Sans", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-900 dark:text-white selection:bg-primary/30">
+<div class="relative flex h-screen w-full flex-col overflow-hidden">
+<!-- Abstract Background Gradient -->
+<div class="absolute top-0 left-0 w-full h-[50vh] bg-gradient-to-b from-primary/20 via-background-dark/80 to-background-dark pointer-events-none z-0" data-alt="Subtle cyan abstract gradient glowing from the top of the dark screen"></div>
+<!-- Radial Glow Accent -->
+<div class="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[80%] h-[40vh] bg-primary/10 blur-[80px] rounded-full pointer-events-none z-0" data-alt="Soft radial light bloom effect at top center"></div>
+<!-- Main Content Container -->
+<div class="relative z-10 flex flex-1 flex-col justify-center items-center px-6 w-full max-w-md mx-auto">
+<!-- Header Section -->
+<div class="flex flex-col items-center justify-end flex-1 pb-10 w-full">
+<!-- Logo Icon -->
+<div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#283639] to-background-dark border border-white/10 shadow-2xl shadow-primary/10 flex items-center justify-center mb-6 relative overflow-hidden group">
+<div class="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500"></div>
+<span class="material-symbols-outlined text-primary text-4xl relative z-10">movie_filter</span>
+</div>
+<!-- Headline -->
+<h1 class="text-white tracking-tight text-[32px] font-bold leading-tight text-center mb-2">
+                    ReelMaker-AI
+                </h1>
+<!-- Subtitle -->
+<p class="text-slate-400 text-base font-normal leading-normal text-center max-w-[280px]">
+                    Next-gen video synthesis on your device.
+                </p>
+</div>
+<!-- Login Actions Section -->
+<div class="w-full flex flex-col gap-4 pb-8">
+<!-- Apple Login -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-5 bg-[#1e293b] hover:bg-[#2c3b52] text-white gap-3 border border-white/5 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-[24px]">phone_iphone</span>
+<span class="text-base font-bold leading-normal tracking-[0.015em]">Continue with Apple</span>
+</button>
+<!-- Google Login -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-5 bg-white hover:bg-gray-100 text-[#111718] gap-3 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-[24px]">search</span>
+<span class="text-base font-bold leading-normal tracking-[0.015em]">Continue with Google</span>
+</button>
+<!-- Divider -->
+<div class="flex items-center gap-3 py-2 opacity-60">
+<div class="h-px bg-slate-700 flex-1"></div>
+<span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Or</span>
+<div class="h-px bg-slate-700 flex-1"></div>
+</div>
+<!-- Email Login (Secondary) -->
+<button class="flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-5 bg-transparent border border-slate-700 hover:border-slate-500 hover:bg-white/5 text-white gap-3 transition-all active:scale-[0.98]">
+<span class="material-symbols-outlined text-[22px] text-slate-300">mail</span>
+<span class="text-base font-medium leading-normal tracking-[0.015em]">Log in with Email</span>
+</button>
+</div>
+<!-- Footer Section -->
+<div class="pb-8 pt-2 w-full text-center">
+<p class="text-slate-500 text-sm font-normal">
+                    Don't have an account? 
+                    <a class="text-primary hover:text-primary/80 font-bold ml-1 transition-colors" href="#">Sign Up</a>
+</p>
+<div class="mt-6 flex justify-center gap-6">
+<a class="text-xs text-slate-600 hover:text-slate-400 transition-colors" href="#">Terms of Service</a>
+<a class="text-xs text-slate-600 hover:text-slate-400 transition-colors" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+</div>
+</body></html>

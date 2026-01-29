@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Summary Wizard: Narration</title>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13c8ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101f22",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "Noto Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased">
+<!-- Main Container -->
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-hidden max-w-md mx-auto shadow-2xl bg-background-light dark:bg-background-dark">
+<!-- Top Navigation / Progress -->
+<div class="flex flex-col w-full pt-8 pb-4 px-6 bg-background-light dark:bg-background-dark z-10">
+<div class="flex items-center justify-between mb-4">
+<button class="text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined">arrow_back_ios_new</span>
+</button>
+<span class="text-sm font-medium text-slate-500 dark:text-slate-400 tracking-wide uppercase">Step 4 of 5</span>
+<button class="opacity-0 cursor-default">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Page Indicators -->
+<div class="flex w-full flex-row items-center justify-center gap-2">
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-primary"></div>
+<div class="h-1.5 flex-1 rounded-full bg-slate-300 dark:bg-[#3b4f54]"></div>
+</div>
+</div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 overflow-y-auto no-scrollbar pb-32">
+<!-- Headline -->
+<div class="px-6 pt-2 pb-6">
+<h1 class="text-slate-900 dark:text-white tracking-tight text-[32px] font-bold leading-tight">Audio Settings</h1>
+<p class="text-slate-600 dark:text-[#9db4b9] text-base font-normal leading-normal pt-2">Choose the language and narration style for your video summary.</p>
+</div>
+<!-- Language Section -->
+<div class="px-6 mb-8">
+<div class="relative group">
+<label class="block text-sm font-medium text-slate-500 dark:text-[#9db4b9] mb-2 pl-1">Output Language</label>
+<div class="relative">
+<select class="appearance-none w-full bg-white dark:bg-[#1c2a2d] border border-slate-200 dark:border-[#2d4045] text-slate-900 dark:text-white text-base rounded-xl py-4 pl-4 pr-12 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all">
+<option value="en-US">English (US)</option>
+<option value="hi-IN">Hindi</option>
+<option value="ur-PK">Urdu</option>
+<option value="es-ES">Spanish</option>
+<option value="fr-FR">French</option>
+</select>
+<div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 dark:text-[#9db4b9]">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Narration Toggle Section -->
+<div class="px-6 mb-6">
+<div class="flex flex-col gap-4 rounded-2xl border border-slate-200 dark:border-[#2d4045] bg-white dark:bg-[#1c2a2d] p-5 shadow-sm">
+<div class="flex flex-row items-center justify-between">
+<div class="flex flex-col gap-1 pr-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-xl">graphic_eq</span>
+<p class="text-slate-900 dark:text-white text-lg font-bold leading-tight">AI Narration</p>
+</div>
+<p class="text-slate-500 dark:text-[#9db4b9] text-sm font-normal leading-normal">AI will write and speak a script based on your video highlights.</p>
+</div>
+<label class="relative flex h-[31px] w-[51px] cursor-pointer items-center rounded-full border-none bg-slate-200 dark:bg-[#283639] p-0.5 has-[:checked]:justify-end has-[:checked]:bg-primary transition-colors duration-200">
+<input checked="" class="peer sr-only" type="checkbox"/>
+<div class="h-[27px] w-[27px] rounded-full bg-white shadow-md transition-all duration-200 peer-checked:shadow-none"></div>
+</label>
+</div>
+<!-- Separator -->
+<div class="h-px w-full bg-slate-100 dark:bg-[#2d4045] my-1"></div>
+<!-- Voice Picker (Conditional Display Area) -->
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<p class="text-sm font-medium text-slate-500 dark:text-[#9db4b9]">Select Voice</p>
+<button class="text-xs font-semibold text-primary">Preview All</button>
+</div>
+<!-- Horizontal Scroll Container -->
+<div class="flex gap-4 overflow-x-auto no-scrollbar py-2 -mx-1 px-1">
+<!-- Voice Option 1: Selected -->
+<div class="flex flex-col items-center gap-2 min-w-[80px] cursor-pointer group">
+<div class="relative p-[3px] rounded-full border-2 border-primary">
+<div class="relative h-16 w-16 rounded-full overflow-hidden bg-slate-200 dark:bg-[#283639]">
+<img alt="Portrait of a woman with a confident expression" class="h-full w-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" data-alt="Close up portrait of a young woman used as avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDk7m0hLQgbe2Tx6lMnC4fOd1DE1CEH1bnzxUkuPE4EXlU3OONR7rU1_t1URLltCY-lHuqwiEf5-YDKn8B-DKKIPi8cSxAOSN46RtO-7Z3zS9Z7N4U-yBLTG6gHBnfdeSm_XNlQgbz6e6T3Yo2GnH51pV042s9xgwE0HLxVU1fRoXT72CcMP_dL3euth49Gfn2IrUz6WyeyyelrwjyrzKkPo9Wuo-2qYdgObm8-b8G2KoswYmc3tsMGrAZPZ97GcNh657Q1VBUspfVk"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-2xl">play_circle</span>
+</div>
+</div>
+<div class="absolute bottom-0 right-0 bg-primary h-5 w-5 rounded-full flex items-center justify-center border-2 border-white dark:border-[#1c2a2d]">
+<span class="material-symbols-outlined text-white text-[12px] font-bold">check</span>
+</div>
+</div>
+<span class="text-sm font-semibold text-primary">Nova</span>
+</div>
+<!-- Voice Option 2 -->
+<div class="flex flex-col items-center gap-2 min-w-[80px] cursor-pointer group">
+<div class="relative p-[3px] rounded-full border-2 border-transparent hover:border-slate-300 dark:hover:border-[#3b4f54] transition-colors">
+<div class="relative h-16 w-16 rounded-full overflow-hidden bg-slate-200 dark:bg-[#283639]">
+<img alt="Portrait of a smiling man with glasses" class="h-full w-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" data-alt="Portrait of a man with glasses used as avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbgrc5q9QDs7C-ATiyRh45SIOTMFuHHWwakpZZDU-6kyDPv_u_rG9HLbnBausuQRB93zEL3YTH0gWl7diIE8Q_jG_ub0FmjLr31tFhUSledyw9xCnbU_Azic4zt80DL5XXIagdZ56BcBhfYUcAN9zh-Ph-iBVZg6yuQ-XkJXmHhcLSMlAwfJ91kFutsmz1Jb7qKFjMnr7kw4rMrsuXdQR2AG9bKFxOn25Rse0BD9uE6eDYmCl-vX38k_8bVQBBRyfZ0GR77ezy7rLp"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-2xl">play_circle</span>
+</div>
+</div>
+</div>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Atlas</span>
+</div>
+<!-- Voice Option 3 -->
+<div class="flex flex-col items-center gap-2 min-w-[80px] cursor-pointer group">
+<div class="relative p-[3px] rounded-full border-2 border-transparent hover:border-slate-300 dark:hover:border-[#3b4f54] transition-colors">
+<div class="relative h-16 w-16 rounded-full overflow-hidden bg-slate-200 dark:bg-[#283639]">
+<img alt="Portrait of a young woman smiling" class="h-full w-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" data-alt="Portrait of a woman smiling used as avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQvKSzniJjY5estcVfPoeqNkocAYCzT6uUM3eGDBhK7DvhqGNJyJHKx9fBr1K0nfH93j3aZqErkHjEqWgBGP9OnM5LP3z5uE_xzUitKRWLrUmGRv4wMPN0PAfnzRxlfn7_MVweE7h_yEFMity-r8mbqZOuiNIZfAIRSFY_k7VlrRyqxAet4c3wDwFtGFKX2Qnvhk8f9RALS0hLvMvweV3gfP_Oi2y3D3ODa191p1zO0YS4sjSvQvsjf52WQW61xm9G2tas0A9hImtR"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-2xl">play_circle</span>
+</div>
+</div>
+</div>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Luna</span>
+</div>
+<!-- Voice Option 4 -->
+<div class="flex flex-col items-center gap-2 min-w-[80px] cursor-pointer group">
+<div class="relative p-[3px] rounded-full border-2 border-transparent hover:border-slate-300 dark:hover:border-[#3b4f54] transition-colors">
+<div class="relative h-16 w-16 rounded-full overflow-hidden bg-slate-200 dark:bg-[#283639]">
+<img alt="Portrait of a serious man" class="h-full w-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" data-alt="Portrait of a man with serious face used as avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBT2JVbCWmN0M_YiPkuG_55ABTU85xwkgyL0blpK1d2_vfY7N9_Fy0sZxsJZhJkk8GxC_aUap9GCPKkk5jbjpw5nVE_5Vr4BMVBRgbI7w0xGVZltHSDYedpwvdJhx4Zy3sR0YDLuvUsyRxiBbJN_t0ZRXhOL7cKjBY8hQ0eO4fg7TF3ZieSsu5vcBYxHR-KNf_N0suIyTqmr-PrA6k6w9vwtmz_52s78r00K01bbroWD69g6WRumV53JKt0ddbg8FPFr14izE1d3-wC"/>
+<div class="absolute inset-0 flex items-center justify-center bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-white text-2xl">play_circle</span>
+</div>
+</div>
+</div>
+<span class="text-sm font-medium text-slate-600 dark:text-slate-300">Orion</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Additional Settings (Subtle) -->
+<div class="px-6 mb-8">
+<div class="flex flex-col gap-4">
+<button class="flex items-center justify-between w-full py-3 px-4 rounded-xl bg-transparent border border-slate-200 dark:border-[#2d4045] hover:bg-slate-50 dark:hover:bg-[#1c2a2d] transition-colors group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#283639] flex items-center justify-center text-slate-500 dark:text-[#9db4b9]">
+<span class="material-symbols-outlined text-lg">speed</span>
+</div>
+<span class="text-slate-700 dark:text-slate-200 font-medium">Narration Speed</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-sm text-slate-500 dark:text-slate-400">Normal (1.0x)</span>
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-600">chevron_right</span>
+</div>
+</button>
+</div>
+</div>
+</div>
+<!-- Sticky Bottom Bar -->
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-background-light via-background-light to-transparent dark:from-background-dark dark:via-background-dark dark:to-transparent z-20">
+<div class="flex items-center gap-4">
+<button class="flex-1 h-14 rounded-xl border border-slate-300 dark:border-[#3b4f54] text-slate-700 dark:text-white font-bold text-base hover:bg-slate-100 dark:hover:bg-[#1c2a2d] transition-colors">
+                    Back
+                </button>
+<button class="flex-[2] h-14 rounded-xl bg-primary text-white font-bold text-base shadow-lg shadow-primary/20 hover:bg-primary/90 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+                    Next Step
+                    <span class="material-symbols-outlined text-xl">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

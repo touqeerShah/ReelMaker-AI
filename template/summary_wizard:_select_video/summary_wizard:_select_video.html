@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReelMaker-AI - Select Video</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13c8ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101f22",
+                        "surface-dark": "#16262a",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for cleaner look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .safe-pb {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased selection:bg-primary/30">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-hidden">
+<!-- Header Section -->
+<div class="sticky top-0 z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-slate-200 dark:border-white/5">
+<div class="flex items-center justify-between px-4 pt-12 pb-4 md:pt-4">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-900 dark:text-white" style="font-size: 24px;">arrow_back</span>
+</button>
+<div class="text-center">
+<h1 class="text-lg font-bold leading-tight tracking-tight">Select Video</h1>
+</div>
+<div class="size-10"></div> <!-- Spacer for center alignment -->
+</div>
+<!-- Progress Bar -->
+<div class="px-6 pb-4">
+<div class="flex justify-between items-center mb-2">
+<span class="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">Step 1 of 3</span>
+<span class="text-xs font-bold text-primary">33%</span>
+</div>
+<div class="h-1.5 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 33%;"></div>
+</div>
+</div>
+<!-- Filters -->
+<div class="flex gap-3 px-4 pb-4 overflow-x-auto no-scrollbar">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-primary px-5 shadow-lg shadow-primary/20 ring-1 ring-inset ring-transparent transition-all">
+<span class="material-symbols-outlined text-background-dark" style="font-size: 18px;">schedule</span>
+<span class="text-background-dark text-sm font-bold">Recent</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-white dark:bg-surface-dark px-5 ring-1 ring-inset ring-slate-200 dark:ring-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+<span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Longest</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-white dark:bg-surface-dark px-5 ring-1 ring-inset ring-slate-200 dark:ring-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+<span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Heaviest</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-xl bg-white dark:bg-surface-dark px-5 ring-1 ring-inset ring-slate-200 dark:ring-white/10 hover:bg-slate-50 dark:hover:bg-white/5 transition-all">
+<span class="text-slate-600 dark:text-slate-300 text-sm font-medium">Favorites</span>
+</button>
+</div>
+</div>
+<!-- Main Content: Video Grid -->
+<main class="flex-1 overflow-y-auto pb-32 px-4 pt-4">
+<p class="text-slate-500 dark:text-slate-400 text-sm mb-4 px-1">Select a clip to generate highlights</p>
+<div class="grid grid-cols-2 xs:grid-cols-3 gap-3">
+<!-- Selected Item -->
+<div class="group relative aspect-[3/4] cursor-pointer rounded-xl ring-4 ring-primary overflow-hidden shadow-xl shadow-primary/10">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-110" data-alt="Person vlogging outdoors in sunlight" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC1Sh9sxybCdLjIw0YPvlwgGsGkj9-U0iqxSqQwrRsU7RN2RQ0x8dcKZtItgM6cKRYv-ZKiwBHfflqI6TSZUKjXQsjOK9dTmw5bbm5GjlBsewYohieisMMSRBYvaqRdECOfn9nASVrIJRXJ2YtUHjwSUqpkp9bMZy7Uv6v9BH1Ne64sQIKky7jeyUsLO8UKlyMYuup6Fn_SJ2eDAEUGO-WMbu0SD65EA9kjZm-uhzbdFHUrZTiFeH7ITDj7SDGyil2pghDImNufYU-y');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20"></div>
+<!-- Selection Checkmark -->
+<div class="absolute top-2 right-2 flex size-6 items-center justify-center rounded-full bg-primary shadow-sm">
+<span class="material-symbols-outlined text-background-dark font-bold" style="font-size: 16px;">check</span>
+</div>
+<div class="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+<span class="text-[10px] font-medium text-slate-300 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm">450 MB</span>
+<span class="text-xs font-bold text-white">12:04</span>
+</div>
+</div>
+<!-- Unselected Item 1 -->
+<div class="group relative aspect-[3/4] cursor-pointer rounded-xl overflow-hidden hover:ring-2 hover:ring-white/20 transition-all">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="City street at night with neon lights" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuApZmcczh6IABgZAjBfG4OQ0vCKs1hn1FX-paJmBZht8Vbv6ZyRE0q1B1KRKDck9J1qJjKb5YBG6toS51YVUyMY0wupYnPwQCONunUKWgPl5B9zQjNwgFV3siG8VHTdK4P23bbak0YZvne0TvTs0DbZk4Nw4ZQ0F4Y7ubxkG5NN8saPpNZZgl6bnyDH_DqMPpGjLj30XKXttnkTOZIEDDAvhyn2IN-NgWa2fZr8q5CWaaIFxYdiJf7UpxAvy1PV90DI2PoL_lrRBJtU');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+<span class="text-[10px] font-medium text-slate-300 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm">120 MB</span>
+<span class="text-xs font-bold text-white">04:23</span>
+</div>
+</div>
+<!-- Unselected Item 2 -->
+<div class="group relative aspect-[3/4] cursor-pointer rounded-xl overflow-hidden hover:ring-2 hover:ring-white/20 transition-all">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Close up of coffee being poured" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBUUAnErhZQtnGxuvUX6RrJ4il2ECM8U41FYkKfjGzg8cB5fWFI4mtvWwc_JmAmTs7KHkrNN-KWSvQkgKsg6kh8KYmUddqdvVSP9MawjlW_sQChBX29z4NcpgsCVeOahTSvNgaLJQ3jlFXBbjs_mgfb7mnaEKm4iK4IFh7WvmcM95oMG6m_o4jcdkq3DCCf3ZQGYfDmTz17rD24LGFVtxmkJ5VpH4bQo5g18PwQbY0eaY1O6hp2uNVMCPxf6C89Mj_diJx6BZO99lYW');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+<span class="text-[10px] font-medium text-slate-300 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm">85 MB</span>
+<span class="text-xs font-bold text-white">01:15</span>
+</div>
+</div>
+<!-- Unselected Item 3 -->
+<div class="group relative aspect-[3/4] cursor-pointer rounded-xl overflow-hidden hover:ring-2 hover:ring-white/20 transition-all">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Mountain landscape with clouds" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAjoenCpXlvlbzsKHk0f2_8U5DsObmRVNSRyPOrNTHHxwzdmQxAH0B8eJZ2MjreG6By8uSzEIwvAi2SWl5vblz9kPqxzsrPDJXh-52Mw8BSPS8bu-a8WM2Aw5jAtvw0gSfHxaZ3i8LYKolvsOHd0DQ0u9yLLm-gSMAifUpD9B7F-nf4wYbV-rj-YI5EtH_pox0xFIMt7p8L_Wb85X8MRilmCjuaCyEiJ4bjGXPGt3llP473CxnAcK10odnOSEfzKYMRDyJ7elDSH_Eq');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+<span class="text-[10px] font-medium text-slate-300 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm">1.2 GB</span>
+<span class="text-xs font-bold text-white">22:10</span>
+</div>
+</div>
+<!-- Unselected Item 4 -->
+<div class="group relative aspect-[3/4] cursor-pointer rounded-xl overflow-hidden hover:ring-2 hover:ring-white/20 transition-all">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Concert crowd with stage lights" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAIOJprLYqsFg90KJ6yHNId-IlrLTuoqGnaSihMpZ1iSRYV_OVq_xAAwhp_l53dISI2ZVpWyKyhTQ8XZLwdLcxiHccYSNKY5oIKxeGMI0DlV0w3VtydYxcpJ23WKTiiiZhb30_lvlUgrPgtDzs65K97ZANTLtCFoftvbACLwoq4t1jlJ6DWMh72kKbwycJmryFqRa-fwbOiCVZ55gYosDzewDQLDXInGO3sbsIClHn_n11PQekAoERhh1vL4FvogLndYmeKvy9Fm7bg');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+<span class="text-[10px] font-medium text-slate-300 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm">340 MB</span>
+<span class="text-xs font-bold text-white">08:30</span>
+</div>
+</div>
+<!-- Unselected Item 5 -->
+<div class="group relative aspect-[3/4] cursor-pointer rounded-xl overflow-hidden hover:ring-2 hover:ring-white/20 transition-all">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Dog running in a park" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-tx2x4A2Epd7TygS10pIbONIibEYlCRNQ1nEaGc_OZRJklYFdmUQDQD1pb9I5qLNOEUP48FoLsZtvqaOGlE2FTf2Q9eQWytdFo_R5ViK2GlPSaiHYVsZaf6uBf4d1mU0_qs-95lf_VPr_lCldjswbRTh_XuptLWDhmm9VdM-yZELtMLQbT2JeiL0JAywnpHtLNV6zwvstBb73bzHBi8gohj-sWwY_9eJbh34r70zv9ZO2PxOAXkV0VwefTcFBfRXSJss51AFO6j3U');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+<span class="text-[10px] font-medium text-slate-300 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm">65 MB</span>
+<span class="text-xs font-bold text-white">02:45</span>
+</div>
+</div>
+<!-- Unselected Item 6 -->
+<div class="group relative aspect-[3/4] cursor-pointer rounded-xl overflow-hidden hover:ring-2 hover:ring-white/20 transition-all">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Aerial view of beach waves" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB9kNaKW8epCCwFmc6HYJkVE-QuhJMw7Zscv66ZJZcEODTusWyYUaBLCiuzCk2Vh7XvMKT8ZfMAXaWeewLt2fQ3nRCS0Dt7QV0Bwa7NgFTHUk0BPM4KgoGiovnTwqH3pyxCrcDvocxQRCu0sIMFZZXvwGWqBJcyFFBDiydEWTPTb0HzuppapQ38ykG-WiHBq3pZ-UjaqaUxBpriluGt7nLf4aCF8YMfzb2M9PYdSLLvqs0dfK2kLjzcLFgc7_9T6CisZgysYVjID9wn');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+<span class="text-[10px] font-medium text-slate-300 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm">210 MB</span>
+<span class="text-xs font-bold text-white">05:00</span>
+</div>
+</div>
+<!-- Unselected Item 7 -->
+<div class="group relative aspect-[3/4] cursor-pointer rounded-xl overflow-hidden hover:ring-2 hover:ring-white/20 transition-all">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Cooking pasta in kitchen" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCzSvdPduyb19o0aYH_rlWUP-qXVfsOkcQsoI4uRKQjeyVGdtG-YuaEJxxD9EgEpyWs023miLziF2Qwfsfty14GWMAJdCaMYcmym6p5IKmbrAOnjKv3uhg7EBw0w2T1TGlMXXboblEEci2CQiAhT1G40ZghBfHd7AZQr29GxDC_HdEo8tJC4iBJPAqxKCFeuetc-4eIba0h93yFZ2ZNssnmZFwmZ8e-8TksQOSFfXi_6D49wfCAqPgMc6sigGXjvWI8U0lW5Rs2_6RZ');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+<span class="text-[10px] font-medium text-slate-300 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm">45 MB</span>
+<span class="text-xs font-bold text-white">00:45</span>
+</div>
+</div>
+<!-- Unselected Item 8 -->
+<div class="group relative aspect-[3/4] cursor-pointer rounded-xl overflow-hidden hover:ring-2 hover:ring-white/20 transition-all">
+<div class="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105" data-alt="Group of friends hiking" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBE_mD2vmhieMsoMNCet2mxIg7SjjsNtU1Q9RnEdh77ld6oByAy7oSKIxE2cTbyglrksMnxyXoexHVPktfz2ZFUC7Dz4qw3t1_CmiiiwXlR_0Ex9FWflGeXq7SrNWUgiwEncWJhtX-fZ87p_etdkMsfOT13_o1btzPYLNJsoxhQM_4ARk8atIV7-bhVutvblO_KwwBO5984VDMUhpu2ISanUm2AiPYrnEnluJTNdgOgVL2iQUaNXP33kEJ6ric9daopnMiB3woUDVzS');">
+</div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-80"></div>
+<div class="absolute bottom-2 left-2 right-2 flex items-end justify-between">
+<span class="text-[10px] font-medium text-slate-300 bg-black/40 px-1.5 py-0.5 rounded backdrop-blur-sm">520 MB</span>
+<span class="text-xs font-bold text-white">14:20</span>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Actions Footer -->
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-xl border-t border-slate-200 dark:border-white/5 safe-pb">
+<div class="flex items-center gap-4 px-6 py-4">
+<button class="flex-1 py-3.5 rounded-xl text-slate-700 dark:text-slate-300 font-semibold hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
+                    Cancel
+                </button>
+<button class="flex-[2] py-3.5 rounded-xl bg-primary text-background-dark font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 active:shadow-sm transition-all flex items-center justify-center gap-2">
+<span>Next Step</span>
+<span class="material-symbols-outlined" style="font-size: 20px; font-weight: 600;">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

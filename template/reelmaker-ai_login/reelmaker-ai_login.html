@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReelMaker-AI Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13c8ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101f22",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display bg-background-light dark:bg-background-dark min-h-screen flex flex-col items-center justify-center p-6 text-slate-900 dark:text-white">
+<!-- Login Container -->
+<div class="w-full max-w-[400px] flex flex-col">
+<!-- Header Section -->
+<div class="flex flex-col items-center justify-center mb-10">
+<h1 class="text-3xl md:text-4xl font-bold tracking-tight text-center mb-2">ReelMaker-AI</h1>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium tracking-wide">CREATE FASTER</p>
+</div>
+<!-- Form Section -->
+<div class="flex flex-col gap-5">
+<!-- Email Field -->
+<label class="flex flex-col gap-2">
+<span class="text-base font-medium text-slate-700 dark:text-slate-200">Email</span>
+<input class="w-full h-14 px-4 rounded-xl bg-white dark:bg-[#1c2527] border border-slate-200 dark:border-[#3b4f54] text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#9db4b9] focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200 text-base" placeholder="creator@example.com" type="email"/>
+</label>
+<!-- Password Field -->
+<label class="flex flex-col gap-2">
+<span class="text-base font-medium text-slate-700 dark:text-slate-200">Password</span>
+<div class="relative flex items-center group">
+<input class="w-full h-14 px-4 pr-12 rounded-xl bg-white dark:bg-[#1c2527] border border-slate-200 dark:border-[#3b4f54] text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-[#9db4b9] focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-all duration-200 text-base" placeholder="Enter your password" type="password"/>
+<div class="absolute right-0 h-full flex items-center pr-4">
+<button class="text-slate-400 hover:text-primary dark:text-[#9db4b9] dark:hover:text-primary transition-colors flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;">visibility</span>
+</button>
+</div>
+</div>
+</label>
+<!-- Forgot Password Link -->
+<div class="flex justify-end -mt-1">
+<a class="text-sm font-medium text-slate-500 hover:text-primary dark:text-[#9db4b9] dark:hover:text-primary transition-colors underline decoration-slate-300 dark:decoration-[#3b4f54] underline-offset-4" href="#">Forgot Password?</a>
+</div>
+<!-- Sign In Button -->
+<button class="w-full h-12 mt-2 bg-primary hover:bg-primary/90 text-[#111718] text-base font-bold tracking-[0.015em] rounded-xl flex items-center justify-center transition-transform active:scale-[0.98] shadow-lg shadow-primary/10">
+                Sign In
+            </button>
+</div>
+<!-- Divider -->
+<div class="relative flex py-8 items-center">
+<div class="flex-grow border-t border-slate-200 dark:border-[#3b4f54]"></div>
+<span class="flex-shrink-0 mx-4 text-slate-400 dark:text-[#5a7076] text-xs uppercase tracking-wider font-medium">Or continue with</span>
+<div class="flex-grow border-t border-slate-200 dark:border-[#3b4f54]"></div>
+</div>
+<!-- Social Buttons -->
+<div class="grid grid-cols-2 gap-4">
+<button class="h-12 bg-white dark:bg-transparent border border-slate-200 dark:border-[#3b4f54] hover:bg-slate-50 dark:hover:bg-[#1c2527] text-slate-700 dark:text-white font-medium rounded-xl flex items-center justify-center gap-2 transition-colors group">
+<!-- Google Icon SVG -->
+<svg class="w-5 h-5 group-hover:scale-110 transition-transform" data-alt="Google G Logo" fill="none" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.52 12.2901C23.52 11.4601 23.4401 10.7401 23.3101 10.0501H12.2501V14.5401H18.7201C18.6001 15.6101 17.9601 17.3801 16.3201 18.5201L16.2995 18.6667L19.785 21.3683L20.0201 21.3901C22.2201 19.3601 23.5201 16.3301 23.52 12.2901Z" fill="#4285F4"></path><path d="M12.2499 23.75C15.4199 23.75 18.0799 22.7 20.0199 20.91L16.3199 18.03C15.3199 18.72 13.9699 19.19 12.2499 19.19C9.13992 19.19 6.50992 17.14 5.56992 14.31L5.4265 14.3219L1.8765 17.0682L1.82992 17.21C3.82992 21.18 7.92992 23.75 12.2499 23.75Z" fill="#34A853"></path><path d="M5.56994 14.3101C5.32994 13.5901 5.19994 12.8201 5.19994 12.0001C5.19994 11.1801 5.32994 10.4101 5.56994 9.69006L5.56306 9.53123L1.97233 6.74609L1.82994 6.79006C0.979942 8.41006 0.499942 10.1501 0.499942 12.0001C0.499942 13.8501 0.979942 15.5901 1.82994 17.2101L5.56994 14.3101Z" fill="#FBBC05"></path><path d="M12.2499 4.81002C14.4899 4.81002 15.9999 5.78002 16.8599 6.59002L20.1299 3.32002C18.0799 1.41002 15.4199 0.250023 12.2499 0.250023C7.92992 0.250023 3.82992 2.82002 1.82992 6.79002L5.56992 9.69002C6.50992 6.86002 9.13992 4.81002 12.2499 4.81002Z" fill="#EA4335"></path></svg>
+                Google
+            </button>
+<button class="h-12 bg-white dark:bg-transparent border border-slate-200 dark:border-[#3b4f54] hover:bg-slate-50 dark:hover:bg-[#1c2527] text-slate-700 dark:text-white font-medium rounded-xl flex items-center justify-center gap-2 transition-colors group">
+<!-- Apple Icon SVG -->
+<svg class="w-5 h-5 dark:fill-white fill-black group-hover:scale-110 transition-transform" data-alt="Apple Logo" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M16.4851 16.5175C15.6575 17.6975 14.7175 18.83 13.3425 18.865C12.0125 18.8925 11.585 18.0925 10.0775 18.0925C8.54751 18.0925 8.10001 18.865 6.79501 18.8925C5.45251 18.9175 4.38001 17.6525 3.52251 16.425C1.77251 13.9175 0.440008 9.32751 2.21751 6.27001C3.10001 4.75501 4.67001 3.79501 6.29001 3.76501C7.60001 3.74001 8.84001 4.63751 9.65751 4.63751C10.4575 4.63751 11.975 3.59501 13.57 3.73251C14.2375 3.76251 16.12 4.00251 17.3175 5.73501C17.215 5.79751 15.3675 6.86001 15.39 8.94001C15.4125 11.2325 17.4125 12.0075 17.5125 12.0525C17.4425 12.24 17.155 13.315 16.4851 16.5175ZM11.1375 2.54501C11.85 1.68751 11.9875 0.540009 11.9875 0.0525085C11.025 0.0925085 9.87001 0.700009 9.17751 1.51751C8.55751 2.24001 8.01251 3.39251 8.08251 4.54251C9.14501 4.62251 10.415 3.40251 11.1375 2.54501Z"></path></svg>
+                Apple
+            </button>
+</div>
+<!-- Footer -->
+<div class="text-center mt-12">
+<p class="text-sm text-slate-500 dark:text-[#9db4b9]">
+                Don't have an account? <a class="text-primary font-bold hover:underline" href="#">Sign Up</a>
+</p>
+</div>
+</div>
+</body></html>

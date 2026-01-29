@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Summary Wizard: Review &amp; Start</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13c8ec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#101f22",
+                        "surface-dark": "#18282b",
+                        "surface-light": "#ffffff",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-50 font-display min-h-screen flex flex-col antialiased selection:bg-primary/30">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800">
+<div class="flex items-center justify-between px-4 py-3">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold tracking-tight">Review &amp; Create</h2>
+<button class="flex items-center justify-center h-10 px-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors">
+<span class="text-slate-500 dark:text-slate-400 font-medium text-sm">Cancel</span>
+</button>
+</div>
+</div>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col p-4 gap-6 max-w-lg mx-auto w-full pb-32">
+<!-- Progress Header -->
+<div class="flex flex-col gap-2">
+<div class="flex justify-between items-end">
+<p class="text-sm font-medium text-primary uppercase tracking-wider">Step 6 of 6</p>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Final Review</p>
+</div>
+<div class="h-1.5 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-full rounded-full shadow-[0_0_10px_rgba(19,200,236,0.5)]"></div>
+</div>
+</div>
+<!-- Header Text -->
+<div>
+<h1 class="text-2xl font-bold mb-2">Ready to create?</h1>
+<p class="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
+                Double check your settings before ReelMaker-AI works its magic on your highlights.
+            </p>
+</div>
+<!-- Video Source Card -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-3 shadow-sm border border-gray-200 dark:border-gray-800/50 flex gap-4 items-center">
+<div class="relative w-24 aspect-[9/16] rounded-lg overflow-hidden bg-gray-800 shrink-0 shadow-inner group">
+<div class="absolute inset-0 bg-cover bg-center opacity-80 group-hover:scale-110 transition-transform duration-500" data-alt="Mountain landscape video thumbnail" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB41CvhMbsGNfLoh2G2YwoCu0gaF3CYrwJOoEExLp_p7gmqCZZ04aj_UvYKfz4DanK5I74-dKpjEooP-95amQOaUgb53_ZPFjE0EOU0qEy5LXYnHQiWKB4ZCdffQrHd2m-z23iw2DayCQFtT-KIf0uKfBL-ZOZodZkImwJy7kDFtITnnNVwFHBPLrJen39tveB_18X-VoDXCpxBuP-8bnsyO9vpC90WsbwNwQr2DZ9ZCXacVVuMyV40cK5fPhy-WYLNAQG4r36e39QQ');"></div>
+<div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-white drop-shadow-md">play_circle</span>
+</div>
+</div>
+<div class="flex flex-col flex-1 gap-1">
+<div class="flex justify-between items-start">
+<p class="font-bold text-base truncate pr-2">IMG_4021.MOV</p>
+<span class="bg-gray-100 dark:bg-gray-800 text-[10px] font-bold px-1.5 py-0.5 rounded text-slate-500 dark:text-slate-400 uppercase">Source</span>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">videocam</span>
+                    Original • 14:20
+                </p>
+</div>
+</div>
+<!-- Settings Summary Grid -->
+<div class="grid grid-cols-2 gap-3">
+<!-- Goal -->
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-gray-200 dark:border-gray-800/50 flex flex-col gap-1">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wide flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">auto_awesome</span> Goal
+                </p>
+<p class="font-semibold text-base">Highlights</p>
+</div>
+<!-- Duration -->
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-gray-200 dark:border-gray-800/50 flex flex-col gap-1">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wide flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">timer</span> Duration
+                </p>
+<p class="font-semibold text-base">60 seconds</p>
+</div>
+<!-- Format -->
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-gray-200 dark:border-gray-800/50 flex flex-col gap-1">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wide flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">aspect_ratio</span> Format
+                </p>
+<p class="font-semibold text-base">9:16 (Story)</p>
+</div>
+<!-- Music -->
+<div class="bg-surface-light dark:bg-surface-dark p-4 rounded-xl border border-gray-200 dark:border-gray-800/50 flex flex-col gap-1">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wide flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">music_off</span> Music
+                </p>
+<p class="font-semibold text-base">None</p>
+</div>
+</div>
+<!-- Resource Impact -->
+<div class="flex gap-4">
+<div class="flex-1 flex items-center gap-3 p-3 rounded-lg bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-800/50">
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">hard_drive</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 dark:text-slate-400">Storage</span>
+<span class="text-sm font-bold">~150MB</span>
+</div>
+</div>
+<div class="flex-1 flex items-center gap-3 p-3 rounded-lg bg-surface-light dark:bg-surface-dark border border-gray-200 dark:border-gray-800/50">
+<div class="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-500">
+<span class="material-symbols-outlined text-[18px]">battery_alert</span>
+</div>
+<div class="flex flex-col">
+<span class="text-xs text-slate-500 dark:text-slate-400">Battery</span>
+<span class="text-sm font-bold text-orange-500">High Impact</span>
+</div>
+</div>
+</div>
+<!-- AI Model Alert -->
+<div class="bg-blue-50 dark:bg-[#152a30] border border-blue-100 dark:border-primary/20 rounded-xl p-4 flex gap-3 items-start">
+<span class="material-symbols-outlined text-primary mt-0.5 shrink-0">smart_toy</span>
+<div class="flex flex-col gap-1">
+<p class="text-sm font-bold text-slate-900 dark:text-white">Phi-3 Small Model Required</p>
+<p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                    This process runs locally using the Phi-3 LLM. If not cached, a one-time download <span class="font-bold text-slate-900 dark:text-slate-200">(2.3GB)</span> will start automatically.
+                </p>
+</div>
+</div>
+</main>
+<!-- Sticky Footer Action -->
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800 z-20">
+<div class="max-w-lg mx-auto w-full">
+<button class="w-full bg-primary hover:bg-primary/90 active:scale-[0.98] transition-all text-background-dark font-bold text-lg py-4 rounded-xl shadow-[0_4px_20px_rgba(19,200,236,0.3)] flex items-center justify-center gap-2 group">
+<span class="material-symbols-outlined group-hover:animate-pulse">auto_awesome</span>
+                Start Processing
+            </button>
+</div>
+</div>
+</body></html>

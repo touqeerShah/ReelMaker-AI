@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ReelMaker-AI Settings</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13c8ec",
+                        "primary-dark": "#0ea5c3",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#091214","surface-dark": "#121e21",
+                        "surface-dark-highlight": "#1a2c30",
+                        "accent-teal": "#13c8ec",
+                    },
+                    fontFamily: {
+                        "display": ["Spline Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                    boxShadow: {
+                        "glow": "0 0 20px rgba(19, 200, 236, 0.15)",
+                        "card": "0 4px 20px rgba(0,0,0,0.2)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a4045; 
+            border-radius: 4px;
+        }
+        .ios-toggle {
+            transition: background-color 0.3s;
+        }
+        .shimmer {
+            background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.05) 50%, rgba(255,255,255,0) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 3s infinite linear;
+        }
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white antialiased overflow-x-hidden selection:bg-primary/30">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto shadow-2xl overflow-hidden bg-background-light dark:bg-background-dark">
+<div class="flex items-center px-4 py-3 pb-2 justify-between sticky top-0 z-50 bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-gray-200 dark:border-white/5">
+<button class="text-slate-900 dark:text-white flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined">arrow_back_ios_new</span>
+</button>
+<h2 class="text-slate-900 dark:text-white text-[17px] font-semibold leading-tight flex-1 text-center pr-10 tracking-tight">ReelMaker-AI</h2>
+</div>
+<div class="flex-1 overflow-y-auto pb-10">
+<div class="px-4 py-6">
+<div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#113036] to-[#0b1618] p-1 shadow-glow border border-primary/20">
+<div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay"></div>
+<div class="relative flex flex-col gap-3 rounded-xl bg-surface-dark/50 p-5 backdrop-blur-sm">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 text-primary shadow-[0_0_15px_rgba(19,200,236,0.3)]">
+<span class="material-symbols-outlined text-[22px]">lock_person</span>
+</div>
+<div>
+<h3 class="text-base font-bold text-white tracking-wide">Local-Only Mode</h3>
+<p class="text-[11px] font-medium uppercase tracking-wider text-primary">Privacy Active</p>
+</div>
+</div>
+<div class="h-2 w-2 rounded-full bg-primary shadow-[0_0_8px_#13c8ec] animate-pulse"></div>
+</div>
+<p class="text-slate-300 text-sm font-normal leading-relaxed border-t border-white/5 pt-3 mt-1">
+                            Your videos are processed entirely on this device using the Neural Engine. No content is ever uploaded to the cloud.
+                        </p>
+</div>
+</div>
+</div>
+<div class="px-4 mb-8">
+<div class="flex flex-col gap-3">
+<div class="flex justify-between items-baseline px-1">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold">Storage</h3>
+<span class="text-primary text-sm font-bold font-mono">3.3 GB Used</span>
+</div>
+<div class="bg-white dark:bg-surface-dark p-5 rounded-2xl shadow-card border border-gray-100 dark:border-white/5">
+<div class="flex gap-6 justify-between mb-3 items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-[18px]">hard_drive</span>
+<p class="text-slate-500 dark:text-slate-300 text-sm font-medium">Model Cache</p>
+</div>
+<span class="text-xs font-mono text-slate-400 dark:text-slate-500 bg-white/5 px-2 py-0.5 rounded">128GB Available</span>
+</div>
+<div class="flex h-2.5 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-[#1f3136]">
+<div class="h-full bg-gradient-to-r from-primary to-cyan-300 shadow-[0_0_10px_rgba(19,200,236,0.5)]" style="width: 15%;"></div>
+<div class="h-full bg-indigo-500/50 w-[2%] border-l border-surface-dark"></div> 
+</div>
+<div class="flex justify-between mt-3 text-xs text-slate-400 dark:text-slate-500 font-medium">
+<span>System: 1.2GB</span>
+<span>Models: 2.1GB</span>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between px-5 pb-3 pt-2">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">
+                    AI Models
+                </h3>
+<button class="text-primary text-xs font-bold uppercase tracking-wider hover:text-white transition-colors">Manage</button>
+</div>
+<div class="flex flex-col gap-4 px-4 mb-10">
+<div class="group relative flex flex-col rounded-2xl bg-white dark:bg-surface-dark p-0 shadow-sm border border-gray-100 dark:border-white/5 hover:border-primary/30 transition-all duration-300 overflow-hidden">
+<div class="p-5 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-4">
+<div class="size-12 rounded-xl bg-gradient-to-br from-orange-500/20 to-orange-600/5 flex items-center justify-center text-orange-500 shadow-inner border border-orange-500/10">
+<span class="material-symbols-outlined">graphic_eq</span>
+</div>
+<div>
+<h4 class="text-base font-bold text-slate-900 dark:text-white">Whisper v3</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Speech Recognition Engine</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-500/10 border border-green-500/20 backdrop-blur-md">
+<span class="material-symbols-outlined text-[14px] text-green-500">check_circle</span>
+<span class="text-[10px] font-bold text-green-500 uppercase tracking-wider">Active</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-[10px] uppercase font-bold tracking-wider text-slate-400">
+<span>Storage Footprint</span>
+<span class="text-slate-300">480 MB</span>
+</div>
+<div class="h-1.5 w-full rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
+<div class="h-full rounded-full bg-green-500/80" style="width: 12%;"></div>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-surface-dark-highlight/50 px-5 py-3 border-t border-gray-100 dark:border-white/5 flex justify-between items-center">
+<span class="text-xs text-slate-500 font-mono">Last used: 2m ago</span>
+<button class="text-slate-400 hover:text-red-400 transition-colors flex items-center gap-1 text-xs font-medium">
+<span class="material-symbols-outlined text-[16px]">delete</span> Uninstall
+                        </button>
+</div>
+</div>
+<div class="group relative flex flex-col rounded-2xl bg-white dark:bg-surface-dark p-0 shadow-sm border border-primary/40 transition-all duration-300 overflow-hidden ring-1 ring-primary/10">
+<div class="absolute inset-0 pointer-events-none z-0 shimmer opacity-10 bg-gradient-to-r from-transparent via-primary to-transparent"></div>
+<div class="relative z-10 p-5 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-4">
+<div class="size-12 rounded-xl bg-gradient-to-br from-indigo-500/20 to-indigo-600/5 flex items-center justify-center text-indigo-400 shadow-inner border border-indigo-500/10">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div>
+<h4 class="text-base font-bold text-slate-900 dark:text-white">Phi-3 Mini</h4>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Logic &amp; Summarization</p>
+</div>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-primary/10 border border-primary/30 shadow-[0_0_10px_rgba(19,200,236,0.1)]">
+<span class="material-symbols-outlined text-[14px] text-primary animate-bounce">arrow_downward</span>
+<span class="text-[10px] font-bold text-primary uppercase tracking-wider">Update</span>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-[10px] uppercase font-bold tracking-wider text-slate-400">
+<span>Current Size</span>
+<span class="text-slate-300">2.8 GB</span>
+</div>
+<div class="h-1.5 w-full rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden relative">
+<div class="h-full rounded-full bg-slate-600 w-[70%] absolute top-0 left-0"></div>
+<div class="h-full rounded-full bg-primary w-[5%] absolute top-0 left-[70%] animate-pulse"></div>
+</div>
+</div>
+</div>
+<div class="relative z-10 bg-gray-50 dark:bg-surface-dark-highlight/50 px-5 py-2.5 border-t border-gray-100 dark:border-white/5 flex justify-between items-center">
+<span class="text-xs text-primary font-mono font-medium">v1.2 Available</span>
+<button class="px-4 py-2 bg-primary hover:bg-cyan-400 active:scale-95 text-background-dark text-xs font-bold rounded-lg transition-all flex items-center gap-2 shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-[18px]">cloud_download</span>
+                            Update Model
+                        </button>
+</div>
+</div>
+<div class="group relative flex flex-col rounded-2xl bg-white/50 dark:bg-surface-dark/40 p-5 shadow-none border border-dashed border-gray-300 dark:border-white/10 opacity-70 hover:opacity-100 hover:bg-white dark:hover:bg-surface-dark transition-all duration-300">
+<div class="flex justify-between items-center">
+<div class="flex gap-4 items-center">
+<div class="size-12 rounded-xl bg-gray-200 dark:bg-white/5 flex items-center justify-center text-slate-400 dark:text-slate-500">
+<span class="material-symbols-outlined">movie_edit</span>
+</div>
+<div>
+<h4 class="text-base font-bold text-slate-700 dark:text-slate-300">Video Gen Alpha</h4>
+<div class="flex items-center gap-2 mt-1">
+<span class="px-1.5 py-0.5 rounded bg-slate-200 dark:bg-white/10 text-[10px] font-bold text-slate-500 uppercase">Beta</span>
+<p class="text-xs text-slate-500 dark:text-slate-500">Experimental</p>
+</div>
+</div>
+</div>
+<button class="size-9 rounded-full bg-slate-200 dark:bg-white/10 flex items-center justify-center text-slate-600 dark:text-white hover:bg-primary hover:text-background-dark transition-all">
+<span class="material-symbols-outlined text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] px-5 pb-3 pt-2">
+                Preferences
+            </h3>
+<div class="px-4 flex flex-col gap-3 mb-10">
+<div class="flex items-center justify-between p-4 rounded-xl bg-white dark:bg-surface-dark border border-gray-100 dark:border-white/5">
+<div class="flex items-center gap-3">
+<div class="p-2.5 rounded-lg bg-yellow-500/10 text-yellow-500">
+<span class="material-symbols-outlined text-[20px]">battery_charging_full</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Only while charging</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Pauses jobs when unplugged</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="ios-toggle w-12 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-primary shadow-inner"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 rounded-xl bg-white dark:bg-surface-dark border border-gray-100 dark:border-white/5">
+<div class="flex items-center gap-3">
+<div class="p-2.5 rounded-lg bg-red-500/10 text-red-500">
+<span class="material-symbols-outlined text-[20px]">battery_alert</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Pause on low battery</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Stops below 20%</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="ios-toggle w-12 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-primary shadow-inner"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-4 rounded-xl bg-white dark:bg-surface-dark border border-gray-100 dark:border-white/5">
+<div class="flex items-center gap-3">
+<div class="p-2.5 rounded-lg bg-purple-500/10 text-purple-500">
+<span class="material-symbols-outlined text-[20px]">memory</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-bold text-slate-900 dark:text-white">Limit concurrent jobs</span>
+<span class="text-xs text-slate-500 dark:text-slate-400">Reduces memory usage</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox" value=""/>
+<div class="ios-toggle w-12 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-primary shadow-inner"></div>
+</label>
+</div>
+</div>
+<div class="w-full flex flex-col items-center justify-center pb-8 opacity-40 gap-1">
+<span class="material-symbols-outlined text-xl">auto_awesome_motion</span>
+<p class="text-[10px] text-slate-500 dark:text-slate-400 font-mono">ReelMaker-AI Engine v2.0 (Build 501)</p>
+</div>
+</div>
+</div>
+
+</body></html>
