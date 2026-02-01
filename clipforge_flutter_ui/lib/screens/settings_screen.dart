@@ -4,6 +4,7 @@ import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 import '../services/auth_service.dart';
+import 'social_media_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({
@@ -151,6 +152,49 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Text(
             'Processing constraints',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+          ),
+          const SizedBox(height: 18),
+          Text(
+            'Publishing',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+          ),
+          const SizedBox(height: 8),
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SocialMediaScreen()),
+              );
+            },
+            borderRadius: BorderRadius.circular(16),
+            child: CfCard(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(Icons.share, color: cs.primary),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Social Media Accounts',
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w800),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Manage auto-posting settings',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: cs.onSurface.withOpacity(0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Icon(Icons.chevron_right, color: cs.onSurface.withOpacity(0.5)),
+                ],
+              ),
+            ),
           ),
           const SizedBox(height: 18),
           Text(

@@ -51,3 +51,11 @@ flutter create . won’t overwrite your lib/ — it adds missing platform scaffo
 If you plan to publish Android-first, just generating Android is enough.
 
 If you paste the output of flutter doctor, I can tell you what Android Studio/SDK piece (if any) is still missing before flutter run succeeds.
+
+
+supabase stop --project-id clipforge_flutter_ui
+
+
+flutter clean
+flutter pub get
+flutter run -d chrome --web-port 3000

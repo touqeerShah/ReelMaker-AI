@@ -5,7 +5,6 @@ import '../models/models.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 import 'create_shorts_wizard.dart';
-import 'create_summary_wizard.dart';
 import 'project_detail_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -123,9 +122,9 @@ class HomeScreen extends StatelessWidget {
           const SizedBox(height: 12),
           _heroCard(
             context,
-            title: 'Create Shorts',
-            subtitle: 'Turn long videos into vertical Shorts/Reels.',
-            icon: Icons.content_cut,
+            title: 'Create Videos',
+            subtitle: 'Split videos or create AI summaries with 6 modes to choose from.',
+            icon: Icons.movie_creation,
             imageUrl:
                 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=1200&q=80',
             primary: true,
@@ -134,17 +133,37 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          _heroCard(
-            context,
-            title: 'Create Summary Video',
-            subtitle: 'Extract key moments and create highlights.',
-            icon: Icons.summarize,
-            imageUrl:
-                'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=80',
-            primary: false,
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const CreateSummaryWizard()),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: _quickActionCard(
+                  context,
+                  title: 'Split Videos',
+                  subtitle: '3 modes',
+                  icon: Icons.content_cut,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const CreateShortsWizard(initialCategory: 'split'),
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _quickActionCard(
+                  context,
+                  title: 'AI Summary',
+                  subtitle: '3 AI modes',
+                  icon: Icons.auto_awesome,
+                  color: Colors.purple,
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const CreateShortsWizard(initialCategory: 'summary'),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 28),
           Row(
@@ -310,6 +329,60 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  Widget _quickActionCard(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required VoidCallback onTap,
+    Color? color,
+  }) {
+    final cs = Theme.of(context).colorScheme;
+    final cardColor = color ?? cs.primary;
+
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: cs.outline.withOpacity(0.18)),
+          color: cs.surface,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: cardColor.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: cardColor, size: 24),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: cs.onSurface.withOpacity(0.65),
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _recentProjectTile(BuildContext context, Project p) {
     final cs = Theme.of(context).colorScheme;
     final df = DateFormat('MMM d • h:mm a');
@@ -402,7 +475,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'ClipForge processes locally on your device. No uploads.',
+                  'Choose from 6 modes: Split videos or create AI summaries.',
                   style: Theme.of(ctx)
                       .textTheme
                       .bodyMedium
@@ -416,19 +489,17 @@ class HomeScreen extends StatelessWidget {
                       MaterialPageRoute(builder: (_) => const CreateShortsWizard()),
                     );
                   },
-                  icon: const Icon(Icons.content_cut),
-                  label: const Text('Create Shorts'),
+                  icon: const Icon(Icons.movie_creation),
+                  label: const Text('Start Creating'),
                 ),
                 const SizedBox(height: 10),
-                OutlinedButton.icon(
-                  onPressed: () {
-                    Navigator.pop(ctx);
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const CreateSummaryWizard()),
-                    );
-                  },
-                  icon: const Icon(Icons.summarize),
-                  label: const Text('Create Summary Video'),
+                Text(
+                  'All processing happens on your device. No uploads required.',
+                  style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(ctx).colorScheme.onSurface.withOpacity(0.55),
+                    fontStyle: FontStyle.italic,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
