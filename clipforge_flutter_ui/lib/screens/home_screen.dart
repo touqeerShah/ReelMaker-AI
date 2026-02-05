@@ -2,56 +2,66 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../models/models.dart';
+import '../services/project_sync_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 import 'create_shorts_wizard.dart';
 import 'project_detail_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
-  static final List<Project> _recentProjects = [
-    Project(
-      id: 'p1',
-      title: 'Podcast Ep 42',
-      createdAt: DateTime.now().subtract(const Duration(hours: 3)),
-      duration: const Duration(minutes: 20),
-      status: ProjectStatus.completed,
-      thumbnail: 'https://images.unsplash.com/photo-1525182008055-f88b95ff7980?w=800&q=80',
-      shortsCount: 12,
-      languages: const ['EN', 'HI', 'UR'],
-    ),
-    Project(
-      id: 'p2',
-      title: 'Gaming Stream Highlights',
-      createdAt: DateTime.now().subtract(const Duration(hours: 10)),
-      duration: const Duration(hours: 2, minutes: 12),
-      status: ProjectStatus.processing,
-      thumbnail: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80',
-      shortsCount: 0,
-      languages: const ['EN'],
-    ),
-    Project(
-      id: 'p3',
-      title: 'Vlog Raw Footage',
-      createdAt: DateTime.now().subtract(const Duration(days: 1)),
-      duration: const Duration(minutes: 58),
-      status: ProjectStatus.draft,
-      thumbnail: 'https://images.unsplash.com/photo-1526481280695-3c687fd5432c?w=800&q=80',
-      shortsCount: 0,
-      languages: const ['EN'],
-    ),
-    Project(
-      id: 'p4',
-      title: 'Workshop Recording',
-      createdAt: DateTime.now().subtract(const Duration(days: 2)),
-      duration: const Duration(hours: 1, minutes: 35),
-      status: ProjectStatus.failed,
-      thumbnail: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80',
-      shortsCount: 0,
-      languages: const ['EN', 'HI'],
-    ),
-  ];
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+  final _syncService = ProjectSyncService();
+  List<Project> _recentProjects = const [];
+  bool _isLoadingRecent = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _loadRecentProjects();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _loadRecentProjects();
+    }
+  }
+
+  Future<void> _loadRecentProjects() async {
+    setState(() {
+      _isLoadingRecent = true;
+    });
+
+    try {
+      final backendProjects = await _syncService.fetchProjectsOnce();
+      final projects =
+          backendProjects.map((json) => Project.fromBackendMap(json)).toList();
+      if (!mounted) return;
+      setState(() {
+        _recentProjects = projects.take(4).toList();
+        _isLoadingRecent = false;
+      });
+    } catch (_) {
+      if (!mounted) return;
+      setState(() {
+        _recentProjects = const [];
+        _isLoadingRecent = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +133,8 @@ class HomeScreen extends StatelessWidget {
           _heroCard(
             context,
             title: 'Create Videos',
-            subtitle: 'Split videos or create AI summaries with 6 modes to choose from.',
+            subtitle:
+                'Split videos or create AI summaries with 6 modes to choose from.',
             icon: Icons.movie_creation,
             imageUrl:
                 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=1200&q=80',
@@ -143,7 +154,8 @@ class HomeScreen extends StatelessWidget {
                   icon: Icons.content_cut,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => const CreateShortsWizard(initialCategory: 'split'),
+                      builder: (_) =>
+                          const CreateShortsWizard(initialCategory: 'split'),
                     ),
                   ),
                 ),
@@ -158,7 +170,8 @@ class HomeScreen extends StatelessWidget {
                   color: Colors.purple,
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (_) => const CreateShortsWizard(initialCategory: 'summary'),
+                      builder: (_) =>
+                          const CreateShortsWizard(initialCategory: 'summary'),
                     ),
                   ),
                 ),
@@ -178,7 +191,8 @@ class HomeScreen extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Open Projects tab to view all.')),
+                    const SnackBar(
+                        content: Text('Open Projects tab to view all.')),
                   );
                 },
                 child: const Text('View All'),
@@ -186,7 +200,23 @@ class HomeScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          ..._recentProjects.take(5).map((p) => _recentProjectTile(context, p)),
+          if (_isLoadingRecent)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 24),
+              child: Center(child: CircularProgressIndicator()),
+            )
+          else if (_recentProjects.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                'No projects yet. Start your first split.',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: cs.onSurface.withOpacity(0.65),
+                    ),
+              ),
+            )
+          else
+            ..._recentProjects.map((p) => _recentProjectTile(context, p)),
         ],
       ),
     );
@@ -471,22 +501,27 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Text(
                   'Import video',
-                  style: Theme.of(ctx).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900),
+                  style: Theme.of(ctx)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   'Choose from 6 modes: Split videos or create AI summaries.',
-                  style: Theme.of(ctx)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: Theme.of(ctx).colorScheme.onSurface.withOpacity(0.65)),
+                  style: Theme.of(ctx).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(ctx)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.65)),
                 ),
                 const SizedBox(height: 16),
                 FilledButton.icon(
                   onPressed: () {
                     Navigator.pop(ctx);
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const CreateShortsWizard()),
+                      MaterialPageRoute(
+                          builder: (_) => const CreateShortsWizard()),
                     );
                   },
                   icon: const Icon(Icons.movie_creation),
@@ -496,9 +531,12 @@ class HomeScreen extends StatelessWidget {
                 Text(
                   'All processing happens on your device. No uploads required.',
                   style: Theme.of(ctx).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(ctx).colorScheme.onSurface.withOpacity(0.55),
-                    fontStyle: FontStyle.italic,
-                  ),
+                        color: Theme.of(ctx)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.55),
+                        fontStyle: FontStyle.italic,
+                      ),
                   textAlign: TextAlign.center,
                 ),
               ],

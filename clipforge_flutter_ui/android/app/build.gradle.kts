@@ -37,8 +37,19 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    sourceSets {
+        getByName("main") {
+            // Bundle whisper.cpp model for on-device transcription.
+            assets.srcDirs("src/main/assets", "../../../whisper.cpp/models")
+        }
+    }
 }
 
 flutter {
     source = "../.."
+}
+
+dependencies {
+    implementation(project(":whisperlib"))
 }

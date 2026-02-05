@@ -191,8 +191,8 @@ web3 = 30
 
 [auth.external.google]
 enabled = true
-client_id = ""
-secret = ""
+client_id = "522345988245.apps.googleusercontent.com"
+secret = "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"
 redirect_uri = "http://127.0.0.1:54321/auth/v1/callback"
 
 

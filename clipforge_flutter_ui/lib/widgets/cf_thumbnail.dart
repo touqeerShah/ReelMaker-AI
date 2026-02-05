@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:io';
+
+import '../services/local_backend_api.dart';
 
 class CfThumbnail extends StatelessWidget {
   const CfThumbnail({
@@ -32,17 +35,7 @@ class CfThumbnail extends StatelessWidget {
           children: [
             Opacity(
               opacity: opacity,
-              child: Image.network(
-                url,
-                fit: BoxFit.cover,
-                errorBuilder: (context, _, __) {
-                  return Container(
-                    color: Colors.black.withOpacity(0.25),
-                    alignment: Alignment.center,
-                    child: const Icon(Icons.videocam, size: 24),
-                  );
-                },
-              ),
+              child: _buildImage(),
             ),
             if (overlayIcon != null)
               Container(
@@ -59,6 +52,52 @@ class CfThumbnail extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildImage() {
+    final resolved = LocalBackendAPI().resolveMediaUrl(url);
+
+    if (resolved.startsWith('http://') || resolved.startsWith('https://')) {
+      return Image.network(
+        resolved,
+        fit: BoxFit.cover,
+        errorBuilder: (context, _, __) {
+          return Container(
+            color: Colors.black.withOpacity(0.25),
+            alignment: Alignment.center,
+            child: const Icon(Icons.videocam, size: 24),
+          );
+        },
+      );
+    }
+
+    if (resolved.startsWith('/') || resolved.startsWith('file://')) {
+      final path =
+          resolved.startsWith('file://') ? resolved.substring(7) : resolved;
+      return Image.file(
+        File(path),
+        fit: BoxFit.cover,
+        errorBuilder: (context, _, __) {
+          return Container(
+            color: Colors.black.withOpacity(0.25),
+            alignment: Alignment.center,
+            child: const Icon(Icons.videocam, size: 24),
+          );
+        },
+      );
+    }
+
+    return Image.network(
+      resolved,
+      fit: BoxFit.cover,
+      errorBuilder: (context, _, __) {
+        return Container(
+          color: Colors.black.withOpacity(0.25),
+          alignment: Alignment.center,
+          child: const Icon(Icons.videocam, size: 24),
+        );
+      },
     );
   }
 }

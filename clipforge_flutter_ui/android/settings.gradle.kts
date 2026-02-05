@@ -24,3 +24,5 @@ plugins {
 }
 
 include(":app")
+include(":whisperlib")
+project(":whisperlib").projectDir = file("../../whisper.cpp/examples/whisper.android/lib")

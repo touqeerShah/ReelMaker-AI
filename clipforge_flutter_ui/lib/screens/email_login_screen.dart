@@ -1,33 +1,40 @@
 import 'package:flutter/material.dart';
 
-import '../services/auth_service.dart';
+import '../services/local_backend_api.dart';
 import '../widgets/widgets.dart';
 
 class EmailLoginScreen extends StatefulWidget {
-  const EmailLoginScreen({super.key});
+  final VoidCallback? onLoginSuccess;
+  
+  const EmailLoginScreen({super.key, this.onLoginSuccess});
 
   @override
   State<EmailLoginScreen> createState() => _EmailLoginScreenState();
 }
 
 class _EmailLoginScreenState extends State<EmailLoginScreen> {
-  final _auth = AuthService();
+  final _api = LocalBackendAPI();
   final _email = TextEditingController();
   final _pass = TextEditingController();
 
   bool _loading = false;
   String? _error;
 
-  Future<void> _run(Future<void> Function() fn) async {
+  Future<void> _login() async {
     setState(() {
       _loading = true;
       _error = null;
     });
     try {
-      await fn();
-      if (mounted) Navigator.pop(context);
+      await _api.login(email: _email.text.trim(), password: _pass.text);
+      if (mounted) {
+        // Login successful - pop screen
+        Navigator.pop(context);
+        // Trigger parent callback to rebuild auth state
+        widget.onLoginSuccess?.call();
+      }
     } catch (e) {
-      setState(() => _error = e.toString());
+      setState(() => _error = e.toString().replaceAll('Exception: ', ''));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -53,12 +60,15 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
             controller: _email,
             keyboardType: TextInputType.emailAddress,
             decoration: const InputDecoration(labelText: 'Email'),
+            enabled: !_loading,
           ),
           const SizedBox(height: 10),
           TextField(
             controller: _pass,
             obscureText: true,
             decoration: const InputDecoration(labelText: 'Password'),
+            enabled: !_loading,
+            onSubmitted: (_) => _login(),
           ),
           const SizedBox(height: 14),
           if (_error != null) ...[
@@ -66,14 +76,14 @@ class _EmailLoginScreenState extends State<EmailLoginScreen> {
             const SizedBox(height: 10),
           ],
           FilledButton(
-            onPressed: _loading ? null : () => _run(() => _auth.signInEmail(_email.text, _pass.text)),
-            child: const Text('Sign in'),
-          ),
-          TextButton(
-            onPressed: _loading
-                ? null
-                : () => _run(() => _auth.sendPasswordReset(_email.text)),
-            child: const Text('Forgot password?'),
+            onPressed: _loading ? null : _login,
+            child: _loading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Sign in'),
           ),
         ],
       ),

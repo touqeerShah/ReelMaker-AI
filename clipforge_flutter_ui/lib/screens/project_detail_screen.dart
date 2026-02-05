@@ -1,7 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 
 import '../models/models.dart';
+import '../services/local_backend_api.dart';
+import '../services/local_queue_db.dart';
 import '../widgets/widgets.dart';
+import 'queue_screen.dart';
 
 class ProjectDetailScreen extends StatefulWidget {
   const ProjectDetailScreen({super.key, required this.project});
@@ -13,372 +18,472 @@ class ProjectDetailScreen extends StatefulWidget {
 }
 
 class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
-  int _langIdx = 0;
+  final _api = LocalBackendAPI();
+  bool _isLoading = true;
+  String? _error;
+  Map<String, dynamic>? _projectData;
+  List<dynamic> _outputs = const [];
+  List<dynamic> _jobs = const [];
 
-  final List<String> _variants = const ['English (Orig)', 'Hindi (Dub)', 'Urdu (Dub)'];
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
+  Future<void> _loadData() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+
+    try {
+      final results = await Future.wait<dynamic>([
+        _api.getProject(widget.project.id),
+        _api.getProjectOutputs(widget.project.id),
+        _api.getJobs(projectId: widget.project.id),
+      ]);
+
+      if (!mounted) return;
+      setState(() {
+        _projectData = results[0] as Map<String, dynamic>;
+        _outputs = results[1] as List<dynamic>;
+        _jobs = results[2] as List<dynamic>;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  Map<String, dynamic> _settingsMap() {
+    final raw = _projectData?['settings_json'];
+    if (raw is String && raw.isNotEmpty) {
+      try {
+        final parsed = jsonDecode(raw);
+        if (parsed is Map<String, dynamic>) return parsed;
+      } catch (_) {}
+    }
+    return {};
+  }
+
+  bool _isSummaryProject(Map<String, dynamic> settings) {
+    final category = (settings['category']?.toString() ?? '').toLowerCase();
+    final mode = (settings['processing_mode']?.toString() ?? '').toLowerCase();
+    return category == 'summary' || mode.startsWith('ai_');
+  }
+
+  Future<void> _showReRenderDialog() async {
+    final settings = _settingsMap();
+    final isSummary = _isSummaryProject(settings);
+    final segmentController = TextEditingController(
+      text: '${settings['segment_seconds'] ?? 60}',
+    );
+    final subscribeController = TextEditingController(
+      text: '${settings['subscribe_seconds'] ?? 5}',
+    );
+    final aiMap = (settings['ai_best_scenes'] is Map)
+        ? Map<String, dynamic>.from(settings['ai_best_scenes'] as Map)
+        : <String, dynamic>{};
+    final chunkController = TextEditingController(
+      text: '${aiMap['srt_chunk_size'] ?? 220}',
+    );
+    final minSceneController = TextEditingController(
+      text: '${aiMap['min_scene_sec'] ?? 20}',
+    );
+    final maxSceneController = TextEditingController(
+      text: '${aiMap['max_scene_sec'] ?? 55}',
+    );
+    final thresholdController = TextEditingController(
+      text: '${aiMap['score_threshold'] ?? 72}',
+    );
+    final gapController = TextEditingController(
+      text: '${aiMap['min_gap_sec'] ?? 2.0}',
+    );
+    final perChunkController = TextEditingController(
+      text: '${aiMap['segments_per_chunk'] ?? 1}',
+    );
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Re-render Project'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (!isSummary) ...[
+              TextField(
+                controller: segmentController,
+                keyboardType: TextInputType.number,
+                decoration:
+                    const InputDecoration(labelText: 'Split length (seconds)'),
+              ),
+              const SizedBox(height: 12),
+              TextField(
+                controller: subscribeController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                    labelText: 'Subscribe overlay (seconds)'),
+              ),
+            ] else ...[
+              TextField(
+                controller: chunkController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'SRT chunk size'),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: minSceneController,
+                keyboardType: TextInputType.number,
+                decoration:
+                    const InputDecoration(labelText: 'Min scene seconds'),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: maxSceneController,
+                keyboardType: TextInputType.number,
+                decoration:
+                    const InputDecoration(labelText: 'Max scene seconds'),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: thresholdController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Score threshold'),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: gapController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: 'Min gap seconds'),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: perChunkController,
+                keyboardType: TextInputType.number,
+                decoration:
+                    const InputDecoration(labelText: 'Segments per chunk'),
+              ),
+            ],
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Re-render'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      final updatedSettings = {...settings};
+      if (!isSummary) {
+        final segmentSeconds =
+            int.tryParse(segmentController.text.trim()) ?? 60;
+        final subscribeSeconds =
+            int.tryParse(subscribeController.text.trim()) ?? 5;
+        updatedSettings['segment_seconds'] = segmentSeconds;
+        updatedSettings['subscribe_seconds'] = subscribeSeconds;
+      } else {
+        updatedSettings['category'] = 'summary';
+        updatedSettings['summary_type'] = 'best_scenes';
+        updatedSettings['ai_best_scenes'] = {
+          ...aiMap,
+          'srt_chunk_size': int.tryParse(chunkController.text.trim()) ?? 220,
+          'min_scene_sec':
+              double.tryParse(minSceneController.text.trim()) ?? 20,
+          'max_scene_sec':
+              double.tryParse(maxSceneController.text.trim()) ?? 55,
+          'score_threshold':
+              int.tryParse(thresholdController.text.trim()) ?? 72,
+          'min_gap_sec': double.tryParse(gapController.text.trim()) ?? 2.0,
+          'segments_per_chunk':
+              int.tryParse(perChunkController.text.trim()) ?? 1,
+        };
+      }
+
+      await _api.reRenderProject(
+        projectId: widget.project.id,
+        settings: updatedSettings,
+      );
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(isSummary
+                ? 'Re-render queued with updated AI best-scene settings'
+                : 'Re-render queued with new split settings')),
+      );
+      _loadData();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Re-render failed: $e'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  Future<void> _deleteOutput(String outputId) async {
+    try {
+      await _api.deleteOutput(outputId);
+      if (!mounted) return;
+      _loadData();
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Failed to delete output: $e'),
+            backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  Future<void> _deleteProject() async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Project?'),
+        content: const Text(
+          'This removes generated split videos for this project. The original source video is kept.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
+    try {
+      await _api.deleteProject(widget.project.id);
+      await LocalQueueDb().deleteJobsForProject(widget.project.id);
+      await LocalQueueDb().deleteCachedProject(widget.project.id);
+      if (!mounted) return;
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            content: Text('Project deleted (original video preserved)')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Failed to delete project: $e'),
+            backgroundColor: Colors.red),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
+    final title = _projectData?['title']?.toString() ?? widget.project.title;
+    final status = _projectData?['status']?.toString() ??
+        projectStatusLabel(widget.project.status);
+    final sourceFilename = _projectData?['filename']?.toString() ??
+        _projectData?['video_title']?.toString() ??
+        title;
+    final settings = _settingsMap();
+    final isSummary = _isSummaryProject(settings);
+    final categoryLabel = isSummary ? 'Summary • Best Scenes' : 'Split';
+    final runningJobs =
+        _jobs.where((j) => (j['status']?.toString() ?? '') == 'running').length;
+    final pendingJobs =
+        _jobs.where((j) => (j['status']?.toString() ?? '') == 'pending').length;
 
     return Scaffold(
       appBar: CfAppBar(
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.project.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900)),
+            Text(title,
+                style: Theme.of(context)
+                    .textTheme
+                    .titleMedium
+                    ?.copyWith(fontWeight: FontWeight.w900)),
             Text(
-              '${widget.project.duration.inMinutes}m • ${projectStatusLabel(widget.project.status)}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurface.withOpacity(0.6)),
+              status,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
             ),
           ],
         ),
         actions: [
           IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.ios_share),
-            tooltip: 'Export/Share',
-          )
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
-        children: [
-          _player(context),
-          const SizedBox(height: 12),
-          _languageSwitcher(context),
-          const SizedBox(height: 18),
-          Row(
-            children: [
-              Text('Generated Clips', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
-              const Spacer(),
-              CfPill(label: '3 Ready', foreground: cs.primary),
-            ],
+            icon: const Icon(Icons.refresh),
+            tooltip: 'Refresh',
+            onPressed: _loadData,
           ),
-          const SizedBox(height: 10),
-          _clipTimeline(context),
-          const SizedBox(height: 18),
-          Text('Actions', style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
-          const SizedBox(height: 8),
-          CfCard(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Icon(Icons.replay),
-                  title: const Text('Re-render'),
-                  subtitle: Text('Change presets, subtitles, or dubs', style: Theme.of(context).textTheme.bodySmall),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {},
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: const Icon(Icons.delete_outline),
-                  title: const Text('Delete outputs'),
-                  subtitle: Text('Free up storage on-device', style: Theme.of(context).textTheme.bodySmall),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () {},
-                ),
-              ],
-            ),
-          )
         ],
       ),
-    );
-  }
-
-  Widget _player(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: AspectRatio(
-        aspectRatio: 16 / 9,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.network(widget.project.thumbnail, fit: BoxFit.cover),
-            DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.topCenter,
-                  colors: [Colors.black.withOpacity(0.75), Colors.transparent],
-                ),
-              ),
-            ),
-            Center(
-              child: FilledButton(
-                onPressed: () {},
-                style: FilledButton.styleFrom(
-                  backgroundColor: cs.primary.withOpacity(0.92),
-                  foregroundColor: Colors.black,
-                  shape: const StadiumBorder(),
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-                ),
-                child: const Icon(Icons.play_arrow, size: 30),
-              ),
-            ),
-            Positioned(
-              left: 12,
-              bottom: 12,
-              right: 12,
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text('00:15', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 12)),
-                      Text(
-                        _formatDuration(widget.project.duration),
-                        style: TextStyle(color: Colors.white.withOpacity(0.7), fontWeight: FontWeight.w600, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(999),
-                    child: LinearProgressIndicator(
-                      value: 0.15,
-                      minHeight: 6,
-                      backgroundColor: Colors.white.withOpacity(0.20),
-                      valueColor: AlwaysStoppedAnimation(cs.primary),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _languageSwitcher(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-
-    return Container(
-      padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(
-        color: cs.surfaceContainerHighest.withOpacity(0.55),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: List.generate(_variants.length, (i) {
-          final selected = i == _langIdx;
-          return Expanded(
-            child: InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: () => setState(() => _langIdx = i),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 160),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: selected ? cs.primary : Colors.transparent,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null
+              ? Center(
+                  child: Text('Failed to load project details\n$_error',
+                      textAlign: TextAlign.center))
+              : ListView(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 96),
                   children: [
-                    Text(
-                      _variants[i],
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: selected ? Colors.black : cs.onSurface.withOpacity(0.55),
-                          ),
-                      overflow: TextOverflow.ellipsis,
+                    CfCard(
+                      padding: const EdgeInsets.all(12),
+                      child: ListTile(
+                        leading: Icon(
+                            isSummary ? Icons.auto_awesome : Icons.video_file),
+                        title: Text('Original Video • $categoryLabel'),
+                        subtitle: Text(sourceFilename),
+                      ),
                     ),
-                    if (selected) ...[
-                      const SizedBox(width: 6),
-                      const Icon(Icons.check_circle, size: 16, color: Colors.black),
-                    ]
-                  ],
-                ),
-              ),
-            ),
-          );
-        }),
-      ),
-    );
-  }
-
-  Widget _clipTimeline(BuildContext context) {
-    final clips = const [
-      (title: 'The Intro & Setup', range: '00:00 - 00:45', len: '00:45', score: 98, thumb: 'https://images.unsplash.com/photo-1525182008055-f88b95ff7980?w=800&q=80'),
-      (title: 'Key Argument', range: '05:10 - 06:10', len: '01:00', score: 86, thumb: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=800&q=80'),
-      (title: 'Closing Takeaway', range: '13:20 - 14:05', len: '00:45', score: 91, thumb: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80'),
-    ];
-
-    return SizedBox(
-      height: 230,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        itemCount: clips.length,
-        separatorBuilder: (_, __) => const SizedBox(width: 12),
-        itemBuilder: (context, i) {
-          final c = clips[i];
-          return SizedBox(
-            width: 200,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(18),
-              onTap: () => _openClipVariants(context, c.title),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(18),
-                    child: AspectRatio(
-                      aspectRatio: 16 / 9,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          Image.network(c.thumb, fit: BoxFit.cover),
-                          Container(color: Colors.black.withOpacity(0.18)),
-                          Positioned(
-                            right: 8,
-                            bottom: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.65),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                c.len,
-                                style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w900),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Text('Queue for this Project',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(fontWeight: FontWeight.w900)),
+                        const Spacer(),
+                        CfPill(label: '$runningJobs running'),
+                        const SizedBox(width: 8),
+                        CfPill(label: '$pendingJobs pending'),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    if (_jobs.isEmpty)
+                      CfCard(
+                        padding: const EdgeInsets.all(16),
+                        child:
+                            const Text('No queue jobs yet for this project.'),
+                      )
+                    else
+                      ..._jobs.map((job) {
+                        final chunk = (job['chunk_index'] ??
+                            job['chunkIndex'] ??
+                            0) as int;
+                        final status = (job['status']?.toString() ?? 'pending')
+                            .toUpperCase();
+                        final progress =
+                            ((job['progress'] as num?)?.toDouble() ?? 0) * 100;
+                        final step =
+                            (job['error_message']?.toString() ?? '').trim();
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: CfCard(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            child: ListTile(
+                              leading: const Icon(Icons.queue_play_next),
+                              title: Text('Chunk ${chunk + 1}'),
+                              subtitle: Text(step.isNotEmpty
+                                  ? '$status • ${progress.toStringAsFixed(0)}% • $step'
+                                  : '$status • ${progress.toStringAsFixed(0)}%'),
+                              onTap: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => QueueScreen(
+                                      initialFilter: QueueFilter.running,
+                                      projectId: widget.project.id,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        );
+                      }),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text(
+                            isSummary
+                                ? 'Best Scene Results'
+                                : 'Split Video Results',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(fontWeight: FontWeight.w900)),
+                        const Spacer(),
+                        CfPill(label: '${_outputs.length} clips'),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    if (_outputs.isEmpty)
+                      CfCard(
+                        padding: const EdgeInsets.all(16),
+                        child: Text(
+                          'No clips yet. Processing is still running.',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      )
+                    else
+                      ..._outputs.map((output) {
+                        final id = output['id']?.toString() ?? '';
+                        final name =
+                            output['filename']?.toString() ?? 'clip.mp4';
+                        final idx = (output['chunk_index'] as int?) ?? 0;
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: CfCard(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            child: ListTile(
+                              leading: const Icon(Icons.movie_outlined),
+                              title: Text(name),
+                              subtitle: Text('Part ${idx + 1}'),
+                              trailing: IconButton(
+                                icon: const Icon(Icons.delete_outline),
+                                tooltip: 'Delete output',
+                                onPressed: () => _deleteOutput(id),
                               ),
                             ),
                           ),
-                          Positioned(
-                            left: 8,
-                            top: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.trending_up, size: 12, color: Colors.black),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '${c.score}',
-                                    style: const TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.w900),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          )
+                        );
+                      }),
+                    const SizedBox(height: 12),
+                    CfCard(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            leading: const Icon(Icons.replay),
+                            title: const Text('Re-render'),
+                            subtitle: Text(isSummary
+                                ? 'Change AI best-scene settings'
+                                : 'Change split and subscribe overlay settings'),
+                            onTap: _showReRenderDialog,
+                          ),
+                          const Divider(height: 1),
+                          ListTile(
+                            leading: const Icon(Icons.delete_forever_outlined),
+                            title: const Text('Delete project'),
+                            subtitle: const Text(
+                                'Deletes generated clips only, keeps original video'),
+                            onTap: _deleteProject,
+                          ),
                         ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Text(
-                    c.title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    c.range,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.55)),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  void _openClipVariants(BuildContext context, String clipTitle) {
-    final cs = Theme.of(context).colorScheme;
-
-    showModalBottomSheet(
-      context: context,
-      showDragHandle: true,
-      isScrollControlled: true,
-      builder: (ctx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(clipTitle, style: Theme.of(ctx).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
-                const SizedBox(height: 12),
-                CfCard(
-                  padding: const EdgeInsets.all(12),
-                  child: Column(
-                    children: [
-                      _variantRow(ctx, 'EN subtitles', 'Burned-in captions', Icons.subtitles, cs.primary),
-                      const Divider(height: 1),
-                      _variantRow(ctx, 'HI dub', 'Voice: Asha', Icons.record_voice_over, Colors.orange),
-                      const Divider(height: 1),
-                      _variantRow(ctx, 'UR dub', 'Voice: Zain', Icons.record_voice_over, Colors.amber),
-                      const Divider(height: 1),
-                      _variantRow(ctx, 'YouTube Shorts preset', '1080x1920 • 60fps', Icons.smart_display, cs.primary),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Row(
-                  children: [
-                    Expanded(
-                      child: FilledButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.ios_share),
-                        label: const Text('Export/Share'),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () {},
-                        icon: const Icon(Icons.delete_outline),
-                        label: const Text('Delete output'),
-                      ),
-                    )
                   ],
-                )
-              ],
-            ),
-          ),
-        );
-      },
+                ),
     );
-  }
-
-  Widget _variantRow(BuildContext context, String title, String subtitle, IconData icon, Color color) {
-    final cs = Theme.of(context).colorScheme;
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: Container(
-        width: 40,
-        height: 40,
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.18)),
-        ),
-        child: Icon(icon, color: color),
-      ),
-      title: Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w900)),
-      subtitle: Text(subtitle, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: cs.onSurface.withOpacity(0.6), fontWeight: FontWeight.w600)),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: () {},
-    );
-  }
-
-  String _formatDuration(Duration d) {
-    final m = d.inMinutes.remainder(60).toString().padLeft(2, '0');
-    final s = d.inSeconds.remainder(60).toString().padLeft(2, '0');
-    final h = d.inHours;
-    return h > 0 ? '${h.toString().padLeft(2, '0')}:$m:$s' : '$m:$s';
   }
 }

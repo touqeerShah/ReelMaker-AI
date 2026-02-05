@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'screens/app_shell.dart';
-import 'screens/login_screen.dart';
-import 'services/auth_service.dart';
+import 'screens/auth_gate.dart';
+import 'services/local_backend_api.dart';
+import 'services/queue_sync_service.dart';
 import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Supabase.initialize(
-    url: 'http://127.0.0.1:54321',
-    anonKey: 'sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz',
-  );
+  // Initialize local backend API
+  await LocalBackendAPI().init();
+  
+  // Connect to WebSocket if authenticated
+  if (LocalBackendAPI().isAuthenticated) {
+    await QueueSyncService().connect();
+  }
 
   runApp(const ClipForgeApp());
 }
@@ -38,35 +41,6 @@ class _ClipForgeAppState extends State<ClipForgeApp> {
         themeMode: _themeMode,
         onThemeModeChanged: (mode) => setState(() => _themeMode = mode),
       ),
-    );
-  }
-}
-
-class AuthGate extends StatelessWidget {
-  const AuthGate({
-    super.key,
-    required this.themeMode,
-    required this.onThemeModeChanged,
-  });
-
-  final ThemeMode themeMode;
-  final ValueChanged<ThemeMode> onThemeModeChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final auth = AuthService();
-
-    return StreamBuilder(
-      stream: auth.authChanges(),
-      builder: (context, _) {
-        final session = auth.session;
-        return session == null
-            ? const LoginScreen()
-            : AppShell(
-                themeMode: themeMode,
-                onThemeModeChanged: onThemeModeChanged,
-              );
-      },
     );
   }
 }

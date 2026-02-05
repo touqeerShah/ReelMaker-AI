@@ -9,7 +9,9 @@ import '../theme/app_theme.dart';
 import '../widgets/widgets.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final VoidCallback? onLoginSuccess;
+
+  const LoginScreen({super.key, this.onLoginSuccess});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -41,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       // immersive like the HTML templates
       extendBodyBehindAppBar: true,
-     appBar: const CfAppBar(title: Text('')),
+      appBar: const CfAppBar(title: Text('')),
 
       body: Stack(
         children: [
@@ -75,10 +77,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       Text(
                         'Next-gen video synthesis on your device.',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: cs.onSurface.withOpacity(0.60), fontWeight: FontWeight.w600),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: cs.onSurface.withOpacity(0.60),
+                            fontWeight: FontWeight.w600),
                       ),
 
                       const SizedBox(height: 26),
@@ -99,7 +100,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           // placeholder if you don't support Apple yet
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Apple login not enabled')),
+                            const SnackBar(
+                                content: Text('Apple login not enabled')),
                           );
                         },
                       ),
@@ -118,19 +120,26 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Divider "Or"
                       Row(
                         children: [
-                          Expanded(child: Divider(color: cs.outline.withOpacity(0.30))),
+                          Expanded(
+                              child:
+                                  Divider(color: cs.outline.withOpacity(0.30))),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
                             child: Text(
                               'OR',
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
                                     color: cs.onSurface.withOpacity(0.55),
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 1.2,
                                   ),
                             ),
                           ),
-                          Expanded(child: Divider(color: cs.outline.withOpacity(0.30))),
+                          Expanded(
+                              child:
+                                  Divider(color: cs.outline.withOpacity(0.30))),
                         ],
                       ),
                       const SizedBox(height: 16),
@@ -142,11 +151,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         background: Colors.transparent,
                         foreground: cs.onSurface,
                         borderColor: cs.outline.withOpacity(0.45),
-                        icon: Icon(Icons.mail, size: 20, color: cs.onSurface.withOpacity(0.8)),
+                        icon: Icon(Icons.mail,
+                            size: 20, color: cs.onSurface.withOpacity(0.8)),
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const EmailLoginScreen()),
+                            MaterialPageRoute(
+                              builder: (_) => EmailLoginScreen(
+                                onLoginSuccess: widget.onLoginSuccess,
+                              ),
+                            ),
                           );
                         },
                       ),
@@ -157,17 +171,22 @@ class _LoginScreenState extends State<LoginScreen> {
                         onTap: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (_) => const SignUpScreen()),
+                            MaterialPageRoute(
+                              builder: (_) => SignUpScreen(
+                                onSignUpSuccess: widget.onLoginSuccess,
+                              ),
+                            ),
                           );
                         },
                         child: Text(
                           "Don't have an account?  Sign Up",
                           textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: cs.primary,
-                                fontWeight: FontWeight.w700,
-                                decoration: TextDecoration.underline,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: cs.primary,
+                                    fontWeight: FontWeight.w700,
+                                    decoration: TextDecoration.underline,
+                                  ),
                         ),
                       ),
 
@@ -214,7 +233,11 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Sign in with Email', style: Theme.of(ctx).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w900)),
+              Text('Sign in with Email',
+                  style: Theme.of(ctx)
+                      .textTheme
+                      .titleLarge
+                      ?.copyWith(fontWeight: FontWeight.w900)),
               const SizedBox(height: 14),
               TextField(
                 controller: email,
@@ -386,7 +409,8 @@ class _OAuthButton extends StatelessWidget {
           backgroundColor: background,
           foregroundColor: foreground,
           side: BorderSide(color: borderColor),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         ),
       ),
     );

@@ -45,5 +45,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>ClipForge needs access to save and read your processed videos.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>ClipForge saves split videos to your Photos library so you can share them.</string>
 </dict>
 </plist>
