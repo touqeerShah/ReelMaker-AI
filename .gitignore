@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Supabase local dev artifacts
+supabase
+supabase/.temp/
+supabase/.branches/
+supabase/.local/
+supabase/.env
+supabase/.env.*
+supabase/.output/
+
+# Text/audio generated outputs (keep code, ignore generated media if you want)
+text-audio/*.wav
+text-audio/*.mp3
+text-audio/*.m4a
+text-audio/*.aac
+text-audio/*.ogg
+text-audio/*.flac
+text-audio/*.srt
+text-audio/*.vtt
+text-audio/*.txt
+text-audio/*.json
+text-audio/*.ass
+
+# OS / Editor
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# IMPORTANT:
+# Do NOT ignore whisper.cpp (explicit allow)
+!whisper.cpp/
+!whisper.cpp/**
+
+testwhisper.cpp/
