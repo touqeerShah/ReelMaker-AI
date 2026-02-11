@@ -51,9 +51,15 @@ class Project {
     // Calculate duration from backend shape (snake_case) with camelCase fallback
     final durationRaw = json['duration_sec'] ??
         json['durationSec'] ??
+        json['source_duration_sec'] ??
+        json['source_duration'] ??
         json['video']?['durationSec'] ??
+        json['video']?['duration_sec'] ??
         0.0;
-    final duration = Duration(seconds: (durationRaw as num).toInt());
+    final durationSeconds = durationRaw is String
+        ? double.tryParse(durationRaw) ?? 0
+        : (durationRaw as num?)?.toDouble() ?? 0;
+    final duration = Duration(seconds: durationSeconds.toInt());
 
     // Get completed chunk count (snake_case + camelCase fallback)
     final completedChunks =

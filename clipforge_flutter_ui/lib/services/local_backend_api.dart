@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Local backend API service for authentication, video upload, and queue management
 class LocalBackendAPI {
   // Default to Mac IP from ifconfig - user can change in settings
-  static const String defaultBaseUrl = 'http://10.130.105.74:4000';
+  static const String defaultBaseUrl = 'http://10.143.187.74:4000';
 
   String _baseUrl = defaultBaseUrl;
   String? _token;
@@ -559,6 +559,47 @@ class LocalBackendAPI {
       return data['jobs'];
     } else {
       throw Exception('Failed to fetch jobs');
+    }
+  }
+
+  Future<Map<String, dynamic>> getSummaryCandidates(String projectId) async {
+    if (_token == null) throw Exception('Not authenticated');
+
+    final response = await http.get(
+      Uri.parse('$_baseUrl/api/projects/$projectId/summary-candidates'),
+      headers: {'Authorization': 'Bearer $_token'},
+    );
+
+    if (response.statusCode == 200) {
+      if (response.body.isEmpty) {
+        throw Exception('Empty response from server');
+      }
+      return jsonDecode(response.body) as Map<String, dynamic>;
+    }
+    throw Exception('Failed to load summary candidates');
+  }
+
+  Future<void> submitSummarySelection({
+    required String projectId,
+    required String jobId,
+    required List<Map<String, dynamic>> selected,
+  }) async {
+    if (_token == null) throw Exception('Not authenticated');
+
+    final response = await http.post(
+      Uri.parse('$_baseUrl/api/projects/$projectId/summary-selection'),
+      headers: {
+        'Authorization': 'Bearer $_token',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({
+        'jobId': jobId,
+        'selected': selected,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to submit selection');
     }
   }
 

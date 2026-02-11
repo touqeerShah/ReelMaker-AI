@@ -1,10 +1,13 @@
 import 'dart:convert';
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../models/models.dart';
 import '../services/local_backend_api.dart';
 import '../services/local_queue_db.dart';
+import '../services/project_sync_service.dart';
 import '../widgets/widgets.dart';
 import 'queue_screen.dart';
 
@@ -19,16 +22,72 @@ class ProjectDetailScreen extends StatefulWidget {
 
 class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
   final _api = LocalBackendAPI();
+  final _syncService = ProjectSyncService();
+  StreamSubscription<List<Map<String, dynamic>>>? _jobsSub;
+  StreamSubscription<List<Map<String, dynamic>>>? _projectsSub;
+  String? _jobsFingerprint;
+  int _lastCompletedCount = -1;
   bool _isLoading = true;
   String? _error;
   Map<String, dynamic>? _projectData;
   List<dynamic> _outputs = const [];
   List<dynamic> _jobs = const [];
+  bool _loadingCandidates = false;
 
   @override
   void initState() {
     super.initState();
     _loadData();
+    _startLiveUpdates();
+  }
+
+  void _startLiveUpdates() {
+    _syncService.startJobPolling();
+    _syncService.startProjectPolling();
+
+    _jobsSub = _syncService.jobsStream.listen((jobs) async {
+      final filtered = jobs
+          .where(
+              (j) => (j['project_id']?.toString() ?? '') == widget.project.id)
+          .toList();
+
+      final fingerprint = filtered
+          .map((j) =>
+              '${j['id']}:${j['status']}:${j['progress']}:${j['error_message']}')
+          .join('|');
+      if (fingerprint == _jobsFingerprint) return;
+      _jobsFingerprint = fingerprint;
+
+      if (!mounted) return;
+      setState(() => _jobs = filtered);
+
+      final completedCount = filtered
+          .where((j) => (j['status']?.toString() ?? '') == 'completed')
+          .length;
+      if (completedCount != _lastCompletedCount) {
+        _lastCompletedCount = completedCount;
+        try {
+          final outputs = await _api.getProjectOutputs(widget.project.id);
+          if (mounted) {
+            setState(() => _outputs = outputs);
+          }
+        } catch (_) {}
+      }
+    });
+
+    _projectsSub = _syncService.projectsStream.listen((projects) {
+      final match = projects.cast<Map<String, dynamic>>().firstWhere(
+            (p) => (p['id']?.toString() ?? '') == widget.project.id,
+            orElse: () => const <String, dynamic>{},
+          );
+      if (match.isEmpty || !mounted) return;
+      setState(() {
+        _projectData = {
+          ...(_projectData ?? const <String, dynamic>{}),
+          ...match,
+        };
+      });
+    });
   }
 
   Future<void> _loadData() async {
@@ -71,15 +130,192 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
     return {};
   }
 
+  String _processingMode(Map<String, dynamic> settings) {
+    return (settings['processing_mode']?.toString() ?? '').toLowerCase();
+  }
+
   bool _isSummaryProject(Map<String, dynamic> settings) {
     final category = (settings['category']?.toString() ?? '').toLowerCase();
-    final mode = (settings['processing_mode']?.toString() ?? '').toLowerCase();
-    return category == 'summary' || mode.startsWith('ai_');
+    final mode = _processingMode(settings);
+    if (mode == 'ai_best_scenes_split') return false;
+    return category == 'summary';
+  }
+
+  bool _usesAiSettings(Map<String, dynamic> settings) {
+    final mode = _processingMode(settings);
+    return mode.startsWith('ai_');
+  }
+
+  String _formatTimestamp(double seconds) {
+    final total = seconds.floor();
+    final h = total ~/ 3600;
+    final m = (total % 3600) ~/ 60;
+    final s = total % 60;
+    if (h > 0) {
+      return '${h.toString().padLeft(2, '0')}:${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+    }
+    return '${m.toString().padLeft(2, '0')}:${s.toString().padLeft(2, '0')}';
+  }
+
+  Future<void> _openSummarySelection(String jobId) async {
+    if (_loadingCandidates) return;
+    setState(() => _loadingCandidates = true);
+    try {
+      final data = await _api.getSummaryCandidates(widget.project.id);
+      if (!mounted) return;
+
+      final candidatesRaw = (data['candidates'] as List?) ?? const [];
+      final suggestedRaw = (data['suggested'] as List?) ?? const [];
+
+      final candidates = candidatesRaw
+          .whereType<Map>()
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList();
+      final suggested = suggestedRaw
+          .whereType<Map>()
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList();
+
+      if (candidates.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No candidates available yet.')),
+        );
+        return;
+      }
+
+      String keyFor(Map<String, dynamic> s) =>
+          '${s['chunkIndex']}_${s['startSec']}_${s['endSec']}';
+
+      final selectedKeys = <String>{
+        for (final s in (suggested.isNotEmpty ? suggested : candidates))
+          keyFor(s),
+      };
+
+      await showModalBottomSheet<void>(
+        context: context,
+        isScrollControlled: true,
+        builder: (ctx) {
+          return StatefulBuilder(
+            builder: (ctx, setModalState) {
+              return SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        children: [
+                          const Text(
+                            'Select Summary Scenes',
+                            style: TextStyle(fontWeight: FontWeight.w900, fontSize: 16),
+                          ),
+                          const Spacer(),
+                          TextButton(
+                            onPressed: () {
+                              setModalState(() {
+                                selectedKeys
+                                  ..clear()
+                                  ..addAll(candidates.map(keyFor));
+                              });
+                            },
+                            child: const Text('Select all'),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Flexible(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: candidates.length,
+                          itemBuilder: (ctx, idx) {
+                            final s = candidates[idx];
+                            final start = (s['startSec'] as num?)?.toDouble() ?? 0;
+                            final end = (s['endSec'] as num?)?.toDouble() ?? 0;
+                            final chunkIndex = (s['chunkIndex'] as num?)?.toInt() ?? 0;
+                            final story = (s['storyText']?.toString() ?? '').trim();
+                            final k = keyFor(s);
+                            return CheckboxListTile(
+                              value: selectedKeys.contains(k),
+                              onChanged: (v) {
+                                setModalState(() {
+                                  if (v == true) {
+                                    selectedKeys.add(k);
+                                  } else {
+                                    selectedKeys.remove(k);
+                                  }
+                                });
+                              },
+                              title: Text(
+                                'Chunk ${chunkIndex + 1} • ${_formatTimestamp(start)} - ${_formatTimestamp(end)}',
+                                style: const TextStyle(fontWeight: FontWeight.w700),
+                              ),
+                              subtitle: story.isNotEmpty ? Text(story) : const Text('No narration text'),
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: () => Navigator.pop(ctx),
+                              child: const Text('Cancel'),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: FilledButton(
+                              onPressed: () async {
+                                final selected = candidates
+                                    .where((s) => selectedKeys.contains(keyFor(s)))
+                                    .toList();
+                                if (selected.isEmpty) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Select at least one scene.')),
+                                  );
+                                  return;
+                                }
+                                await _api.submitSummarySelection(
+                                  projectId: widget.project.id,
+                                  jobId: jobId,
+                                  selected: selected,
+                                );
+                                if (!mounted) return;
+                                Navigator.pop(ctx);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Selection submitted. Rendering started.')),
+                                );
+                              },
+                              child: const Text('Generate'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to load candidates: $e')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _loadingCandidates = false);
+      }
+    }
   }
 
   Future<void> _showReRenderDialog() async {
     final settings = _settingsMap();
     final isSummary = _isSummaryProject(settings);
+    final isAiMode = _usesAiSettings(settings);
     final segmentController = TextEditingController(
       text: '${settings['segment_seconds'] ?? 60}',
     );
@@ -115,7 +351,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (!isSummary) ...[
+            if (!isAiMode) ...[
               TextField(
                 controller: segmentController,
                 keyboardType: TextInputType.number,
@@ -188,7 +424,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
 
     try {
       final updatedSettings = {...settings};
-      if (!isSummary) {
+      if (!isAiMode) {
         final segmentSeconds =
             int.tryParse(segmentController.text.trim()) ?? 60;
         final subscribeSeconds =
@@ -196,8 +432,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         updatedSettings['segment_seconds'] = segmentSeconds;
         updatedSettings['subscribe_seconds'] = subscribeSeconds;
       } else {
-        updatedSettings['category'] = 'summary';
-        updatedSettings['summary_type'] = 'best_scenes';
+        if (isSummary) {
+          updatedSettings['category'] = 'summary';
+          updatedSettings['summary_type'] = 'best_scenes';
+        }
         updatedSettings['ai_best_scenes'] = {
           ...aiMap,
           'srt_chunk_size': int.tryParse(chunkController.text.trim()) ?? 220,
@@ -221,7 +459,7 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(isSummary
+            content: Text(isAiMode
                 ? 'Re-render queued with updated AI best-scene settings'
                 : 'Re-render queued with new split settings')),
       );
@@ -303,11 +541,18 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
         title;
     final settings = _settingsMap();
     final isSummary = _isSummaryProject(settings);
-    final categoryLabel = isSummary ? 'Summary • Best Scenes' : 'Split';
+    final mode = _processingMode(settings);
+    final categoryLabel = mode == 'ai_best_scenes_split'
+        ? 'Split • Best Scenes (Clips)'
+        : isSummary
+            ? 'Summary • Best Scenes'
+            : 'Split';
     final runningJobs =
         _jobs.where((j) => (j['status']?.toString() ?? '') == 'running').length;
-    final pendingJobs =
-        _jobs.where((j) => (j['status']?.toString() ?? '') == 'pending').length;
+    final pendingJobs = _jobs.where((j) {
+      final s = (j['status']?.toString() ?? '').toLowerCase();
+      return s == 'pending' || s == 'awaiting_selection';
+    }).length;
 
     return Scaffold(
       appBar: CfAppBar(
@@ -379,8 +624,10 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                         final chunk = (job['chunk_index'] ??
                             job['chunkIndex'] ??
                             0) as int;
-                        final status = (job['status']?.toString() ?? 'pending')
-                            .toUpperCase();
+                        final statusRaw =
+                            (job['status']?.toString() ?? 'pending')
+                                .toLowerCase();
+                        final status = statusRaw.toUpperCase();
                         final progress =
                             ((job['progress'] as num?)?.toDouble() ?? 0) * 100;
                         final step =
@@ -396,6 +643,15 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                               subtitle: Text(step.isNotEmpty
                                   ? '$status • ${progress.toStringAsFixed(0)}% • $step'
                                   : '$status • ${progress.toStringAsFixed(0)}%'),
+                              trailing: statusRaw == 'awaiting_selection'
+                                  ? OutlinedButton(
+                                      onPressed: _loadingCandidates
+                                          ? null
+                                          : () => _openSummarySelection(
+                                              job['id']?.toString() ?? ''),
+                                      child: const Text('Select Scenes'),
+                                    )
+                                  : null,
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -414,9 +670,11 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                     Row(
                       children: [
                         Text(
-                            isSummary
-                                ? 'Best Scene Results'
-                                : 'Split Video Results',
+                            mode == 'ai_best_scenes_split'
+                                ? 'Best Scene Clips'
+                                : isSummary
+                                    ? 'Best Scene Results'
+                                    : 'Split Video Results',
                             style: Theme.of(context)
                                 .textTheme
                                 .titleLarge
@@ -485,5 +743,12 @@ class _ProjectDetailScreenState extends State<ProjectDetailScreen> {
                   ],
                 ),
     );
+  }
+
+  @override
+  void dispose() {
+    _jobsSub?.cancel();
+    _projectsSub?.cancel();
+    super.dispose();
   }
 }

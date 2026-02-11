@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
+import 'package:just_audio/just_audio.dart';
 import 'dart:io';
 
 import '../services/local_backend_api.dart';
@@ -50,7 +51,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
   // Step 2: Category & Processing Mode
   String _category = 'split'; // 'split' or 'summary'
   String _processingMode = 'split_only';
-  // Modes: split_only, split_voice, split_translate, ai_best_scenes, ai_summary_hybrid, ai_story_only
+  // Modes: split_only, split_voice, split_translate, ai_best_scenes, ai_best_scenes_split, ai_summary_hybrid, ai_story_only
 
   // Split settings (always shown)
   int _segmentSeconds = 60;
@@ -67,7 +68,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
 
   // AI mode settings (for all AI summarization modes)
   String _aiLanguage = 'English';
-  String _aiVoice = 'Natural Female';
+  String _aiVoice = 'af_heart';
   bool _keepOriginalAudio = false;
   bool _showAiAdvancedTuning = false;
   bool _aiAddSubtitles = false;
@@ -82,6 +83,19 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
   double _aiMinGapSec = 2.0;
   int _aiSegmentsPerChunk = 1;
 
+  // AI Summary tuning (hybrid/story)
+  bool _showAiSummaryTuning = false;
+  double _ttsDuckVolume = 0.18;
+  double _ttsMaxSpeedup = 1.35;
+  double _ttsMinSlowdown = 0.85;
+  double _ttsFadeSec = 0.12;
+  int _aiContextOverlap = 6;
+  int _summarySegmentsPerChunk = 3;
+  int _summaryMaxSegments = 0;
+  bool _summaryPlanOnly = true;
+  final AudioPlayer _voicePlayer = AudioPlayer();
+  String? _lastVoicePreview;
+
   // Channel name for watermark
   String? _selectedChannelName = 'My Channel';
 
@@ -94,6 +108,71 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
     'facebook': false,
   };
   final ImagePicker _imagePicker = ImagePicker();
+
+  bool get _isAiBestScenesMode =>
+      _processingMode == 'ai_best_scenes' ||
+      _processingMode == 'ai_best_scenes_split';
+
+  bool get _isAiBackendMode => _processingMode.startsWith('ai_');
+
+  bool get _isAiSummaryMode =>
+      _processingMode == 'ai_summary_hybrid' ||
+      _processingMode == 'ai_story_only';
+
+  static const List<Map<String, String>> _voiceOptions = [
+    {'id': 'af_heart', 'name': 'Heart', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'af_alloy', 'name': 'Alloy', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'af_aoede', 'name': 'Aoede', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'af_bella', 'name': 'Bella', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'af_jessica', 'name': 'Jessica', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'af_kore', 'name': 'Kore', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'af_nicole', 'name': 'Nicole', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'af_nova', 'name': 'Nova', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'af_river', 'name': 'River', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'af_sarah', 'name': 'Sarah', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'af_sky', 'name': 'Sky', 'language': 'en-us', 'gender': 'Female'},
+    {'id': 'am_adam', 'name': 'Adam', 'language': 'en-us', 'gender': 'Male'},
+    {'id': 'am_echo', 'name': 'Echo', 'language': 'en-us', 'gender': 'Male'},
+    {'id': 'am_eric', 'name': 'Eric', 'language': 'en-us', 'gender': 'Male'},
+    {'id': 'am_fenrir', 'name': 'Fenrir', 'language': 'en-us', 'gender': 'Male'},
+    {'id': 'am_liam', 'name': 'Liam', 'language': 'en-us', 'gender': 'Male'},
+    {'id': 'am_michael', 'name': 'Michael', 'language': 'en-us', 'gender': 'Male'},
+    {'id': 'am_onyx', 'name': 'Onyx', 'language': 'en-us', 'gender': 'Male'},
+    {'id': 'am_puck', 'name': 'Puck', 'language': 'en-us', 'gender': 'Male'},
+    {'id': 'am_santa', 'name': 'Santa', 'language': 'en-us', 'gender': 'Male'},
+    {'id': 'bf_emma', 'name': 'Emma', 'language': 'en-gb', 'gender': 'Female'},
+    {'id': 'bf_isabella', 'name': 'Isabella', 'language': 'en-gb', 'gender': 'Female'},
+    {'id': 'bm_george', 'name': 'George', 'language': 'en-gb', 'gender': 'Male'},
+    {'id': 'bm_lewis', 'name': 'Lewis', 'language': 'en-gb', 'gender': 'Male'},
+    {'id': 'bf_alice', 'name': 'Alice', 'language': 'en-gb', 'gender': 'Female'},
+    {'id': 'bf_lily', 'name': 'Lily', 'language': 'en-gb', 'gender': 'Female'},
+    {'id': 'bm_daniel', 'name': 'Daniel', 'language': 'en-gb', 'gender': 'Male'},
+    {'id': 'bm_fable', 'name': 'Fable', 'language': 'en-gb', 'gender': 'Male'},
+  ];
+
+  String _voiceLabel(String id) {
+    final match = _voiceOptions
+        .cast<Map<String, String>>()
+        .firstWhere((v) => v['id'] == id, orElse: () => {});
+    if (match.isEmpty) return id;
+    final name = match['name'] ?? id;
+    final lang = match['language']?.toUpperCase() ?? '';
+    final gender = match['gender'] ?? '';
+    return [name, lang, gender].where((e) => e.isNotEmpty).join(' • ');
+  }
+
+  Future<void> _playVoicePreview(String voiceId) async {
+    final base =
+        LocalBackendAPI().baseUrl.replaceAll(RegExp(r'/+$'), '');
+    final url = '$base/voices/voice_$voiceId.wav';
+    try {
+      _lastVoicePreview = voiceId;
+      await _voicePlayer.setUrl(url);
+      await _voicePlayer.play();
+    } catch (e) {
+      debugPrint('Voice preview failed: $e');
+    }
+  }
 
   void _logStep(String message) {
     final ts = DateTime.now().toIso8601String();
@@ -144,6 +223,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
     _controller.dispose();
     _uploadProgress.dispose();
     _uploadStatus.dispose();
+    _voicePlayer.dispose();
     super.dispose();
   }
 
@@ -348,13 +428,13 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
         throw Exception('Not authenticated - please login first');
       }
       _logStep('API initialized | baseUrl=${api.baseUrl}');
-      final isAiBestScenes = _processingMode == 'ai_best_scenes';
+      final isAiBackendMode = _isAiBackendMode;
 
       double? videoDuration;
       String? videoResolution;
 
       // 2. Get video metadata only when needed (AI best-scenes can start immediately).
-      if (isAiBestScenes) {
+      if (isAiBackendMode) {
         videoDuration = 0;
         videoResolution = null;
         _logStep('AI mode: skipping upfront metadata probe');
@@ -384,7 +464,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
 
       // 3. Store video metadata (split mode) or upload full video (AI backend)
       Map<String, dynamic> videoMetadata;
-      if (isAiBestScenes) {
+      if (isAiBackendMode) {
         if (_selectedVideoPath == null) {
           throw Exception('Video file path is missing');
         }
@@ -435,13 +515,13 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
               videoMetadata;
       final videoId = videoMap['id'];
       _logStep(
-          'Video ready | videoId=$videoId | ai=$isAiBestScenes | uploaded=${isAiBestScenes}');
+          'Video ready | videoId=$videoId | ai=$isAiBackendMode | uploaded=${isAiBackendMode}');
 
       final safeVideoDuration = videoDuration ?? 0;
 
       // 4. Calculate chunks
       final totalChunks =
-          isAiBestScenes ? 1 : (safeVideoDuration / _segmentSeconds).ceil();
+          isAiBackendMode ? 1 : (safeVideoDuration / _segmentSeconds).ceil();
       _logStep('Total chunks calculated: $totalChunks');
 
       // 5. Create project settings
@@ -451,8 +531,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
         watermarkEnabled: true,
         watermarkPosition: 'bottom_right',
         watermarkAlpha: 0.55,
-        subtitlesEnabled:
-            _processingMode == 'ai_best_scenes' ? _aiAddSubtitles : false,
+        subtitlesEnabled: _isAiBackendMode ? _aiAddSubtitles : false,
         channelName: _selectedChannelName ?? 'My Channel',
         textRandomPosition: true,
         flipMode: 'none',
@@ -469,11 +548,23 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
         maxScenes: 0,
         maxTotalSec: 0,
         segmentsPerChunk: _aiSegmentsPerChunk,
+        summaryMinSegSec: 0,
+        summaryMaxSegSec: 0,
+        summarySegmentsPerChunk:
+            _isAiSummaryMode ? _summarySegmentsPerChunk : 0,
+        summaryMaxSegments: _isAiSummaryMode ? _summaryMaxSegments : 0,
+        summaryPlanOnly: _isAiSummaryMode ? _summaryPlanOnly : false,
+        maxSpeedup: _isAiSummaryMode ? _ttsMaxSpeedup : 0,
+        minSlowdown: _isAiSummaryMode ? _ttsMinSlowdown : 0,
+        duckVolume: _processingMode == 'ai_summary_hybrid' ? _ttsDuckVolume : 0,
+        ttsFadeSec: _isAiSummaryMode ? _ttsFadeSec : 0,
+        ttsVoice: _isAiSummaryMode ? _aiVoice : '',
+        contextOverlap: _isAiSummaryMode ? _aiContextOverlap : 0,
       );
 
       // 6. Generate job definitions for backend
       final jobsForBackend = <Map<String, dynamic>>[];
-      if (isAiBestScenes) {
+      if (isAiBackendMode) {
         jobsForBackend.add({
           'id': const Uuid().v4(),
           'chunk_index': 0,
@@ -497,8 +588,10 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
       _logStep('Creating backend project with $totalChunks jobs...');
       final settingsPayload = settings.toJson();
       settingsPayload['category'] = _category;
-      if (isAiBestScenes) {
-        settingsPayload['summary_type'] = 'best_scenes';
+      if (isAiBackendMode) {
+        if (_processingMode == 'ai_best_scenes') {
+          settingsPayload['summary_type'] = 'best_scenes';
+        }
         settingsPayload['ai_best_scenes'] = aiOptions.toJson();
       }
 
@@ -520,7 +613,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
       _logStep(
           'Backend project ready | projectId=$backendProjectId | jobs=${backendJobs.length}');
 
-      if (isAiBestScenes) {
+      if (isAiBackendMode) {
         final jobId = backendJobs.first['id'] as String;
         await api.updateJob(
           jobId: jobId,
@@ -1147,6 +1240,17 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
           const SizedBox(height: 12),
           _ProcessingModeCard(
             context,
+            title: 'AI Best Scenes (Clips)',
+            description: 'AI finds best scenes and outputs multiple clips',
+            icon: Icons.auto_awesome,
+            selected: _processingMode == 'ai_best_scenes_split',
+            onTap: () =>
+                setState(() => _processingMode = 'ai_best_scenes_split'),
+            footnote: '⚠️ Requires audio in video',
+          ),
+          const SizedBox(height: 12),
+          _ProcessingModeCard(
+            context,
             title: 'Split + Change Voice',
             description: 'Split and replace audio with TTS',
             icon: Icons.record_voice_over,
@@ -1202,7 +1306,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
         const Divider(),
         const SizedBox(height: 24),
 
-        if (_processingMode != 'ai_best_scenes') ...[
+        if (!_isAiBackendMode) ...[
           // Split settings are not used in AI Best Scenes mode
           Text('Split Settings',
               style: Theme.of(context)
@@ -1473,6 +1577,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
 
         // Conditional: AI Mode Settings (All 3 AI modes)
         if (_processingMode == 'ai_best_scenes' ||
+            _processingMode == 'ai_best_scenes_split' ||
             _processingMode == 'ai_summary_hybrid' ||
             _processingMode == 'ai_story_only') ...[
           const SizedBox(height: 32),
@@ -1529,37 +1634,53 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
               prefixIcon: Icon(Icons.record_voice_over),
               hintText: 'Select AI voice',
             ),
-            items: const [
-              DropdownMenuItem(
-                  value: 'Natural Female', child: Text('Natural Female')),
-              DropdownMenuItem(
-                  value: 'Natural Male', child: Text('Natural Male')),
-              DropdownMenuItem(
-                  value: 'Professional Female',
-                  child: Text('Professional Female')),
-              DropdownMenuItem(
-                  value: 'Professional Male', child: Text('Professional Male')),
-              DropdownMenuItem(
-                  value: 'Energetic Female', child: Text('Energetic Female')),
-              DropdownMenuItem(
-                  value: 'Energetic Male', child: Text('Energetic Male')),
-              DropdownMenuItem(
-                  value: 'Calm Female', child: Text('Calm Female')),
-              DropdownMenuItem(value: 'Calm Male', child: Text('Calm Male')),
-              DropdownMenuItem(
-                  value: 'Documentary Narrator',
-                  child: Text('Documentary Narrator')),
-              DropdownMenuItem(
-                  value: 'News Anchor', child: Text('News Anchor')),
-            ],
+            items: _voiceOptions
+                .map(
+                  (v) => DropdownMenuItem(
+                    value: v['id'],
+                    child: Text(_voiceLabel(v['id'] ?? '')),
+                  ),
+                )
+                .toList(),
             onChanged: (v) {
-              if (v != null) setState(() => _aiVoice = v);
+              if (v == null) return;
+              setState(() => _aiVoice = v);
             },
           ),
+          if (_isAiSummaryMode) ...[
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Text(
+                  _voiceLabel(_aiVoice),
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: cs.onSurface.withOpacity(0.7)),
+                ),
+                const Spacer(),
+                TextButton.icon(
+                  onPressed: () {
+                    _lastVoicePreview = _aiVoice;
+                    _playVoicePreview(_aiVoice);
+                  },
+                  icon: const Icon(Icons.play_arrow),
+                  label: const Text('Play sample'),
+                ),
+              ],
+            ),
+            Text(
+              'Sample file: voice_${_aiVoice}.wav',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(color: cs.onSurface.withOpacity(0.6)),
+            ),
+          ],
 
           // Mode-specific info boxes
           const SizedBox(height: 20),
-          if (_processingMode == 'ai_best_scenes')
+          if (_isAiBestScenesMode)
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -1580,7 +1701,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
                 ],
               ),
             ),
-          if (_processingMode == 'ai_best_scenes') ...[
+          if (_isAiBestScenesMode) ...[
             const SizedBox(height: 16),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
@@ -1620,7 +1741,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
                   style: TextStyle(fontWeight: FontWeight.w800),
                 ),
                 subtitle: const Text(
-                  'Uses model max input tokens instead of item count.',
+                  'If off, you control how many subtitle lines go into each AI request.',
                 ),
               ),
               if (!_aiAutoChunk) ...[
@@ -1634,10 +1755,17 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
                 Slider(
                   value: _aiSrtChunkSize.toDouble(),
                   min: 80,
-                  max: 800,
-                  divisions: 36,
+                  max: 1200,
+                  divisions: 56,
                   label: '$_aiSrtChunkSize',
                   onChanged: (v) => setState(() => _aiSrtChunkSize = v.round()),
+                ),
+                Text(
+                  'Larger chunks give the model more context but take longer.',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall
+                      ?.copyWith(color: cs.onSurface.withOpacity(0.6)),
                 ),
               ],
               const SizedBox(height: 10),
@@ -1646,11 +1774,11 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
                 value: _aiAnySceneLength,
                 onChanged: (v) => setState(() => _aiAnySceneLength = v),
                 title: const Text(
-                  'Allow any scene length',
+                  'Allow long scenes (1–10 min)',
                   style: TextStyle(fontWeight: FontWeight.w800),
                 ),
                 subtitle: const Text(
-                  'No min/max duration limits.',
+                  'Uses a wide 1–10 minute window.',
                 ),
               ),
               if (!_aiAnySceneLength) ...[
@@ -1735,11 +1863,15 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
                 decoration: const InputDecoration(
                   prefixIcon: Icon(Icons.tune),
                   labelText: 'Segments per Chunk',
+                  helperText:
+                      'How many candidate scenes the AI proposes per chunk.',
                 ),
                 items: const [
-                  DropdownMenuItem(value: 1, child: Text('1 (Recommended)')),
+                  DropdownMenuItem(value: 1, child: Text('1')),
                   DropdownMenuItem(value: 2, child: Text('2')),
                   DropdownMenuItem(value: 3, child: Text('3')),
+                  DropdownMenuItem(value: 4, child: Text('4')),
+                  DropdownMenuItem(value: 5, child: Text('5')),
                 ],
                 onChanged: (v) {
                   if (v != null) setState(() => _aiSegmentsPerChunk = v);
@@ -1789,6 +1921,169 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
                 ],
               ),
             ),
+          if (_isAiSummaryMode) ...[
+            const SizedBox(height: 16),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: _aiAutoChunk,
+              onChanged: (v) => setState(() => _aiAutoChunk = v),
+              title: const Text(
+                'Auto chunk by token budget',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+              subtitle: const Text(
+                'If off, you control how many subtitle lines go into each AI request.',
+              ),
+            ),
+            if (!_aiAutoChunk) ...[
+              Text(
+                'SRT Chunk Size: $_aiSrtChunkSize items',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              Slider(
+                value: _aiSrtChunkSize.toDouble(),
+                min: 80,
+                max: 1200,
+                divisions: 56,
+                label: '$_aiSrtChunkSize',
+                onChanged: (v) => setState(() => _aiSrtChunkSize = v.round()),
+              ),
+              Text(
+                'Larger chunks give the model more context but take longer.',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.copyWith(color: cs.onSurface.withOpacity(0.6)),
+              ),
+            ],
+            const SizedBox(height: 8),
+            Text(
+              'Context Overlap: $_aiContextOverlap lines',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            Slider(
+              value: _aiContextOverlap.toDouble(),
+              min: 0,
+              max: 30,
+              divisions: 30,
+              label: '$_aiContextOverlap',
+              onChanged: (v) => setState(() => _aiContextOverlap = v.round()),
+            ),
+            const SizedBox(height: 8),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              value: _summaryPlanOnly,
+              onChanged: (v) => setState(() => _summaryPlanOnly = v),
+              title: const Text(
+                'Review scenes before render',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+              subtitle: const Text(
+                'Stops after analysis so you can pick scenes before rendering.',
+              ),
+            ),
+            const SizedBox(height: 8),
+            DropdownButtonFormField<int>(
+              value: _summarySegmentsPerChunk,
+              decoration: const InputDecoration(
+                prefixIcon: Icon(Icons.tune),
+                labelText: 'Segments per Chunk',
+                helperText: 'How many summary segments to take from each chunk.',
+              ),
+              items: const [
+                DropdownMenuItem(value: 1, child: Text('1')),
+                DropdownMenuItem(value: 2, child: Text('2')),
+                DropdownMenuItem(value: 3, child: Text('3')),
+                DropdownMenuItem(value: 4, child: Text('4')),
+                DropdownMenuItem(value: 5, child: Text('5')),
+              ],
+              onChanged: (v) {
+                if (v != null) setState(() => _summarySegmentsPerChunk = v);
+              },
+            ),
+            const SizedBox(height: 8),
+            Text(
+              _summaryMaxSegments == 0
+                  ? 'Max Total Segments: Unlimited'
+                  : 'Max Total Segments: $_summaryMaxSegments',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            Slider(
+              value: _summaryMaxSegments.toDouble(),
+              min: 0,
+              max: 60,
+              divisions: 60,
+              label: _summaryMaxSegments == 0
+                  ? 'Unlimited'
+                  : _summaryMaxSegments.toString(),
+              onChanged: (v) =>
+                  setState(() => _summaryMaxSegments = v.round()),
+            ),
+            const SizedBox(height: 8),
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text(
+                'Advanced Narration Tuning',
+                style: TextStyle(fontWeight: FontWeight.w800),
+              ),
+              subtitle: const Text('TTS speed fit, fade and mix'),
+              trailing: Switch(
+                value: _showAiSummaryTuning,
+                onChanged: (v) => setState(() => _showAiSummaryTuning = v),
+              ),
+            ),
+            if (_showAiSummaryTuning) ...[
+              if (_processingMode == 'ai_summary_hybrid') ...[
+                _LabeledSlider(
+                  label: 'Duck Volume',
+                  value: _ttsDuckVolume,
+                  min: 0.1,
+                  max: 0.5,
+                  divisions: 8,
+                  onChanged: (v) => setState(() => _ttsDuckVolume = v),
+                  suffix: _ttsDuckVolume.toStringAsFixed(2),
+                  helper:
+                      'Lower = more original audio reduction under narration.',
+                ),
+              ],
+              _LabeledSlider(
+                label: 'Max Speedup',
+                value: _ttsMaxSpeedup,
+                min: 1.0,
+                max: 1.8,
+                divisions: 8,
+                onChanged: (v) => setState(() => _ttsMaxSpeedup = v),
+                suffix: '${_ttsMaxSpeedup.toStringAsFixed(2)}x',
+              ),
+              _LabeledSlider(
+                label: 'Min Slowdown',
+                value: _ttsMinSlowdown,
+                min: 0.6,
+                max: 1.0,
+                divisions: 8,
+                onChanged: (v) => setState(() => _ttsMinSlowdown = v),
+                suffix: '${_ttsMinSlowdown.toStringAsFixed(2)}x',
+              ),
+              _LabeledSlider(
+                label: 'TTS Fade',
+                value: _ttsFadeSec,
+                min: 0.05,
+                max: 0.3,
+                divisions: 10,
+                onChanged: (v) => setState(() => _ttsFadeSec = v),
+                suffix: '${_ttsFadeSec.toStringAsFixed(2)}s',
+              ),
+            ],
+          ],
         ],
       ],
     );
@@ -1806,9 +2101,11 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
                 ? 'Split + Translate'
                 : _processingMode == 'ai_best_scenes'
                     ? 'AI Best Scenes Only'
-                    : _processingMode == 'ai_summary_hybrid'
-                        ? 'AI Summary + Original Audio'
-                        : 'AI Story Only';
+                    : _processingMode == 'ai_best_scenes_split'
+                        ? 'AI Best Scenes (Clips)'
+                        : _processingMode == 'ai_summary_hybrid'
+                            ? 'AI Summary + Original Audio'
+                            : 'AI Story Only';
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
@@ -1834,7 +2131,7 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
               const Divider(),
               _ReviewItem(label: 'Processing Mode', value: modeName),
               const Divider(),
-              if (_processingMode != 'ai_best_scenes') ...[
+              if (!_isAiBackendMode) ...[
                 _ReviewItem(
                     label: 'Segment Duration',
                     value: '$_segmentSeconds seconds'),
@@ -1863,26 +2160,27 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
                     value: _keepOriginalAudio ? 'Yes' : 'No'),
               ],
               if (_processingMode == 'ai_best_scenes' ||
+                  _processingMode == 'ai_best_scenes_split' ||
                   _processingMode == 'ai_summary_hybrid' ||
                   _processingMode == 'ai_story_only') ...[
                 const Divider(),
                 _ReviewItem(label: 'AI Language', value: _aiLanguage),
                 const Divider(),
-                _ReviewItem(label: 'AI Voice', value: _aiVoice),
+                _ReviewItem(label: 'AI Voice', value: _voiceLabel(_aiVoice)),
               ],
-              if (_processingMode == 'ai_best_scenes') ...[
-                const Divider(),
-                _ReviewItem(
-                    label: 'SRT Chunk Size',
-                    value: _aiAutoChunk
-                        ? 'Auto (max tokens)'
-                        : '$_aiSrtChunkSize items'),
-                const Divider(),
-                _ReviewItem(
-                    label: 'Scene Duration',
-                    value: _aiAnySceneLength
-                        ? 'Any length'
-                        : '${_aiMinSceneSec.toStringAsFixed(0)}-${_aiMaxSceneSec.toStringAsFixed(0)} sec'),
+              if (_isAiBestScenesMode) ...[
+                if (!_aiAutoChunk) ...[
+                  const Divider(),
+                  _ReviewItem(
+                      label: 'SRT Chunk Size', value: '$_aiSrtChunkSize items'),
+                ],
+                if (!_aiAnySceneLength) ...[
+                  const Divider(),
+                  _ReviewItem(
+                      label: 'Scene Duration',
+                      value:
+                          '${_aiMinSceneSec.toStringAsFixed(0)}-${_aiMaxSceneSec.toStringAsFixed(0)} sec'),
+                ],
                 const Divider(),
                 _ReviewItem(
                     label: 'Score Threshold',
@@ -1895,6 +2193,51 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
                 _ReviewItem(
                     label: 'Segments per Chunk',
                     value: _aiSegmentsPerChunk.toString()),
+              ],
+              if (_isAiSummaryMode) ...[
+                if (!_aiAutoChunk) ...[
+                  const Divider(),
+                  _ReviewItem(
+                      label: 'SRT Chunk Size',
+                      value: '$_aiSrtChunkSize items'),
+                ],
+                const Divider(),
+                _ReviewItem(
+                    label: 'Context Overlap',
+                    value: '$_aiContextOverlap lines'),
+                const Divider(),
+                _ReviewItem(
+                    label: 'Review Scenes First',
+                    value: _summaryPlanOnly ? 'Yes' : 'No'),
+                const Divider(),
+                _ReviewItem(
+                    label: 'Segments per Chunk',
+                    value: _summarySegmentsPerChunk.toString()),
+                const Divider(),
+                _ReviewItem(
+                    label: 'Max Total Segments',
+                    value:
+                        _summaryMaxSegments == 0
+                            ? 'Unlimited'
+                            : _summaryMaxSegments.toString()),
+                if (_processingMode == 'ai_summary_hybrid') ...[
+                  const Divider(),
+                  _ReviewItem(
+                      label: 'Duck Volume',
+                      value: _ttsDuckVolume.toStringAsFixed(2)),
+                ],
+                const Divider(),
+                _ReviewItem(
+                    label: 'Max Speedup',
+                    value: '${_ttsMaxSpeedup.toStringAsFixed(2)}x'),
+                const Divider(),
+                _ReviewItem(
+                    label: 'Min Slowdown',
+                    value: '${_ttsMinSlowdown.toStringAsFixed(2)}x'),
+                const Divider(),
+                _ReviewItem(
+                    label: 'TTS Fade',
+                    value: '${_ttsFadeSec.toStringAsFixed(2)}s'),
               ],
             ],
           ),
@@ -2089,6 +2432,63 @@ class _CreateShortsWizardState extends State<CreateShortsWizard> {
                   textAlign: TextAlign.end)),
         ],
       ),
+    );
+  }
+}
+
+class _LabeledSlider extends StatelessWidget {
+  const _LabeledSlider({
+    required this.label,
+    required this.value,
+    required this.min,
+    required this.max,
+    required this.onChanged,
+    this.divisions,
+    this.suffix,
+    this.helper,
+  });
+
+  final String label;
+  final double value;
+  final double min;
+  final double max;
+  final int? divisions;
+  final ValueChanged<double> onChanged;
+  final String? suffix;
+  final String? helper;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          suffix == null ? label : '$label: $suffix',
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(fontWeight: FontWeight.w700),
+        ),
+        Slider(
+          value: value,
+          min: min,
+          max: max,
+          divisions: divisions,
+          label: suffix,
+          onChanged: onChanged,
+          activeColor: cs.primary,
+        ),
+        if (helper != null)
+          Text(
+            helper!,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: cs.onSurface.withOpacity(0.6)),
+          ),
+        const SizedBox(height: 8),
+      ],
     );
   }
 }

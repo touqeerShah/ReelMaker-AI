@@ -56,18 +56,21 @@ class CfThumbnail extends StatelessWidget {
   }
 
   Widget _buildImage() {
+    if (url.trim().isEmpty) {
+      return _fallback();
+    }
+
     final resolved = LocalBackendAPI().resolveMediaUrl(url);
+    if (!_isImagePath(resolved)) {
+      return _fallback();
+    }
 
     if (resolved.startsWith('http://') || resolved.startsWith('https://')) {
       return Image.network(
         resolved,
         fit: BoxFit.cover,
         errorBuilder: (context, _, __) {
-          return Container(
-            color: Colors.black.withOpacity(0.25),
-            alignment: Alignment.center,
-            child: const Icon(Icons.videocam, size: 24),
-          );
+          return _fallback();
         },
       );
     }
@@ -79,11 +82,7 @@ class CfThumbnail extends StatelessWidget {
         File(path),
         fit: BoxFit.cover,
         errorBuilder: (context, _, __) {
-          return Container(
-            color: Colors.black.withOpacity(0.25),
-            alignment: Alignment.center,
-            child: const Icon(Icons.videocam, size: 24),
-          );
+          return _fallback();
         },
       );
     }
@@ -92,12 +91,24 @@ class CfThumbnail extends StatelessWidget {
       resolved,
       fit: BoxFit.cover,
       errorBuilder: (context, _, __) {
-        return Container(
-          color: Colors.black.withOpacity(0.25),
-          alignment: Alignment.center,
-          child: const Icon(Icons.videocam, size: 24),
-        );
+        return _fallback();
       },
+    );
+  }
+
+  bool _isImagePath(String value) {
+    final lower = value.toLowerCase();
+    final parsed = Uri.tryParse(lower);
+    final path = parsed?.path ?? lower;
+    const exts = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp'];
+    return exts.any(path.endsWith);
+  }
+
+  Widget _fallback() {
+    return Container(
+      color: Colors.black.withOpacity(0.25),
+      alignment: Alignment.center,
+      child: const Icon(Icons.videocam, size: 24),
     );
   }
 }

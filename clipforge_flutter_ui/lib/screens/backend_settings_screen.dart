@@ -138,7 +138,7 @@ class _BackendSettingsScreenState extends State<BackendSettingsScreen> {
             TextField(
               controller: _urlController,
               decoration: InputDecoration(
-                hintText: 'http://10.130.105.74:4000',
+                hintText: 'http://10.143.187.74:4000',
                 border: const OutlineInputBorder(),
                 prefixIcon: const Icon(Icons.link),
                 suffixIcon: IconButton(
@@ -239,7 +239,7 @@ class _BackendSettingsScreenState extends State<BackendSettingsScreen> {
             ),
             const SizedBox(height: 8),
             _buildExampleUrl('Local WiFi', 'http://192.168.1.100:4000'),
-            _buildExampleUrl('Hotspot', 'http://10.130.105.74:4000'),
+            _buildExampleUrl('Hotspot', 'http://10.143.187.74:4000'),
             _buildExampleUrl('Localhost (Mac only)', 'http://localhost:4000'),
           ],
         ),

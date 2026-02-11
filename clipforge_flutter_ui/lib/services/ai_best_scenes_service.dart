@@ -41,6 +41,17 @@ class AiBestScenesOptions {
   final int maxScenes;
   final double maxTotalSec;
   final int segmentsPerChunk;
+  final double summaryMinSegSec;
+  final double summaryMaxSegSec;
+  final int summarySegmentsPerChunk;
+  final int summaryMaxSegments;
+  final bool summaryPlanOnly;
+  final double maxSpeedup;
+  final double minSlowdown;
+  final double duckVolume;
+  final double ttsFadeSec;
+  final String ttsVoice;
+  final int contextOverlap;
 
   const AiBestScenesOptions({
     this.srtChunkSize = 0,
@@ -51,19 +62,75 @@ class AiBestScenesOptions {
     this.maxScenes = 0,
     this.maxTotalSec = 0,
     this.segmentsPerChunk = 1,
+    this.summaryMinSegSec = 0,
+    this.summaryMaxSegSec = 0,
+    this.summarySegmentsPerChunk = 0,
+    this.summaryMaxSegments = 0,
+    this.summaryPlanOnly = false,
+    this.maxSpeedup = 0,
+    this.minSlowdown = 0,
+    this.duckVolume = 0,
+    this.ttsFadeSec = 0,
+    this.ttsVoice = '',
+    this.contextOverlap = 0,
   });
 
   Map<String, dynamic> toJson() {
-    return {
-      'srt_chunk_size': srtChunkSize,
-      'min_scene_sec': minSceneSec,
-      'max_scene_sec': maxSceneSec,
+    final data = <String, dynamic>{
       'score_threshold': scoreThreshold,
       'min_gap_sec': minGapSec,
-      'max_scenes': maxScenes,
-      'max_total_sec': maxTotalSec,
       'segments_per_chunk': segmentsPerChunk,
     };
+
+    if (srtChunkSize > 0) {
+      data['srt_chunk_size'] = srtChunkSize;
+    }
+    if (minSceneSec > 0) {
+      data['min_scene_sec'] = minSceneSec;
+    }
+    if (maxSceneSec > 0) {
+      data['max_scene_sec'] = maxSceneSec;
+    }
+    if (maxScenes > 0) {
+      data['max_scenes'] = maxScenes;
+    }
+    if (maxTotalSec > 0) {
+      data['max_total_sec'] = maxTotalSec;
+    }
+    if (summaryMinSegSec > 0) {
+      data['summary_min_seg_sec'] = summaryMinSegSec;
+    }
+    if (summaryMaxSegSec > 0) {
+      data['summary_max_seg_sec'] = summaryMaxSegSec;
+    }
+    if (summarySegmentsPerChunk > 0) {
+      data['summary_segments_per_chunk'] = summarySegmentsPerChunk;
+    }
+    if (summaryMaxSegments > 0) {
+      data['summary_max_segments'] = summaryMaxSegments;
+    }
+    if (summaryPlanOnly) {
+      data['summary_plan_only'] = true;
+    }
+    if (maxSpeedup > 0) {
+      data['max_speedup'] = maxSpeedup;
+    }
+    if (minSlowdown > 0) {
+      data['min_slowdown'] = minSlowdown;
+    }
+    if (duckVolume > 0) {
+      data['duck_volume'] = duckVolume;
+    }
+    if (ttsFadeSec > 0) {
+      data['tts_fade_sec'] = ttsFadeSec;
+    }
+    if (ttsVoice.isNotEmpty) {
+      data['tts_voice'] = ttsVoice;
+    }
+    if (contextOverlap > 0) {
+      data['context_overlap'] = contextOverlap;
+    }
+    return data;
   }
 }
 

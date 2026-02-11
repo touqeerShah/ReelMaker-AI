@@ -30,6 +30,7 @@ dependencies:
   permission_handler: ^11.3.0
   video_player: ^2.9.2
   gal: ^2.3.0
+  just_audio: ^0.9.36
 
 flutter:
   uses-material-design: true
