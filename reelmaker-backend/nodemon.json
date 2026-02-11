@@ -1,0 +1,14 @@
+{
+  "watch": [
+    "*.js",
+    "routes",
+    "middleware",
+    "database",
+    "worker"
+  ],
+  "ignore": [
+    "uploads/**",
+    "reelmaker.db",
+    "reelmaker.db-*"
+  ]
+}
