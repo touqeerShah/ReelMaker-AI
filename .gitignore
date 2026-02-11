@@ -23,6 +23,7 @@ text-audio/*.txt
 text-audio/*.json
 text-audio/*.ass
 
+text-audio/
 # OS / Editor
 .DS_Store
 .idea/
