@@ -34,4 +34,5 @@ text-audio/*.ass
 !whisper.cpp/
 !whisper.cpp/**
 
-testwhisper.cpp/
+test
+whisper.cpp/

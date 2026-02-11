@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ReelMaker-AI - Transform your videos with AI-powered editing, subtitles, and intelligent summarization">
+    <meta name="keywords" content="video processing, AI, subtitles, translation, video summary">
+    <title>ReelMaker-AI | AI-Powered Video Processing</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h1>ReelMaker-AI</h1>
+                <p class="hero-subtitle">
+                    Transform your videos with AI-powered editing, multilingual subtitles, and intelligent content summarization
+                </p>
+                <div class="hero-cta">
+                    <button class="btn btn-primary btn-large" onclick="scrollToWorkflow()">
+                        🚀 Get Started
+                    </button>
+                    <button class="btn btn-outline btn-large" onclick="window.location.href='#features'">
+                        ✨ Learn More
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Selection -->
+    <section class="section" id="workflow">
+        <div class="container">
+            <h2 class="text-center">Choose Your Workflow</h2>
+            <p class="text-center" style="color: var(--color-text-secondary); max-width: 600px; margin: 0 auto var(--spacing-xl);">
+                Select the processing mode that fits your needs
+            </p>
+            
+            <div class="workflow-grid">
+                <!-- Simple Processing Workflow -->
+                <div class="workflow-card glass-card" id="workflow-simple" onclick="selectWorkflow('simple')">
+                    <div class="workflow-icon">🎬</div>
+                    <h3 class="workflow-title">Simple Processing</h3>
+                    <p class="workflow-description">
+                        Add subtitles and translations to your videos without modifying the content
+                    </p>
+                    <ul class="workflow-features">
+                        <li>Split video into segments</li>
+                        <li>Automatic subtitle generation</li>
+                        <li>Multi-language translation</li>
+                        <li>Custom subtitle styling</li>
+                    </ul>
+                    <button class="btn btn-primary mt-lg" style="width: 100%;">
+                        Select Workflow
+                    </button>
+                </div>
+
+                <!-- AI Summary Workflow -->
+                <div class="workflow-card glass-card" id="workflow-ai" onclick="selectWorkflow('ai')">
+                    <div class="workflow-icon">🤖</div>
+                    <h3 class="workflow-title">AI Summary Pipeline</h3>
+                    <p class="workflow-description">
+                        Transform long videos into concise summaries with AI-generated narration
+                    </p>
+                    <ul class="workflow-features">
+                        <li>Audio extraction & transcription</li>
+                        <li>AI-powered summarization</li>
+                        <li>Smart clip generation</li>
+                        <li>Text-to-speech narration</li>
+                    </ul>
+                    <button class="btn btn-secondary mt-lg" style="width: 100%;">
+                        Select Workflow
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Upload Section (Hidden by default) -->
+    <section class="section hidden" id="upload-section">
+        <div class="container">
+            <h2 class="text-center">Upload Your Video</h2>
+            
+            <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">📹</div>
+                <p class="upload-text">Drop your video here or click to browse</p>
+                <p class="upload-subtext">Supports MP4, MOV, AVI, MKV • Max 500MB</p>
+                <input type="file" id="fileInput" accept="video/*" onchange="handleFileSelect(event)">
+            </div>
+
+            <!-- Video Preview (Hidden until file selected) -->
+            <div class="video-preview hidden" id="videoPreview">
+                <video id="previewVideo" controls></video>
+            </div>
+
+            <!-- File Info -->
+            <div class="glass-card hidden" id="fileInfo">
+                <h3>📄 File Information</h3>
+                <p><strong>Name:</strong> <span id="fileName"></span></p>
+                <p><strong>Size:</strong> <span id="fileSize"></span></p>
+                <p><strong>Duration:</strong> <span id="fileDuration"></span></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Processing Options Section (Hidden by default) -->
+    <section class="section hidden" id="options-section">
+        <div class="container">
+            <h2 class="text-center">Processing Options</h2>
+            
+            <!-- Simple Processing Options -->
+            <div class="glass-card options-section hidden" id="simple-options">
+                <h3>⚙️ Configure Simple Processing</h3>
+                
+                <div class="option-group">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="option-split" checked>
+                        <span class="option-label">Split Video</span>
+                    </label>
+                    <p class="option-description">Automatically segment video into smaller parts</p>
+                </div>
+
+                <div class="option-group">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="option-subtitles" checked>
+                        <span class="option-label">Generate Subtitles</span>
+                    </label>
+                    <p class="option-description">Add automatic subtitles from audio transcription</p>
+                </div>
+
+                <div class="option-group">
+                    <label class="option-label">Translation Languages</label>
+                    <p class="option-description">Select languages to translate subtitles into</p>
+                    <div class="language-tags" id="languageTags">
+                        <!-- Will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <label class="option-label" for="subtitle-style">Subtitle Style</label>
+                    <select id="subtitle-style">
+                        <option value="default">Default</option>
+                        <option value="bold">Bold</option>
+                        <option value="outlined">Outlined</option>
+                        <option value="boxed">Boxed Background</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- AI Summary Options -->
+            <div class="glass-card options-section hidden" id="ai-options">
+                <h3>🤖 Configure AI Summary</h3>
+                
+                <div class="option-group">
+                    <label class="option-label" for="summary-length">Summary Length</label>
+                    <p class="option-description">Choose how detailed you want the summary to be</p>
+                    <input type="range" id="summary-length" min="1" max="3" value="2" step="1">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--color-text-muted);">
+                        <span>Short</span>
+                        <span>Medium</span>
+                        <span>Comprehensive</span>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <label class="option-label" for="ai-voice">AI Voice</label>
+                    <p class="option-description">Select the voice for text-to-speech narration</p>
+                    <select id="ai-voice">
+                        <option value="male-professional">Male - Professional</option>
+                        <option value="female-professional">Female - Professional</option>
+                        <option value="male-casual">Male - Casual</option>
+                        <option value="female-casual">Female - Casual</option>
+                        <option value="male-energetic">Male - Energetic</option>
+                        <option value="female-energetic">Female - Energetic</option>
+                    </select>
+                </div>
+
+                <div class="option-group">
+                    <label class="option-label" for="output-language">Output Language</label>
+                    <select id="output-language">
+                        <option value="en">English</option>
+                        <option value="es">Spanish</option>
+                        <option value="fr">French</option>
+                        <option value="de">German</option>
+                        <option value="it">Italian</option>
+                        <option value="pt">Portuguese</option>
+                        <option value="ar">Arabic</option>
+                        <option value="hi">Hindi</option>
+                        <option value="zh">Mandarin</option>
+                        <option value="ja">Japanese</option>
+                        <option value="ko">Korean</option>
+                    </select>
+                </div>
+
+                <div class="option-group">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="option-chapters">
+                        <span class="option-label">Create Chapters</span>
+                    </label>
+                    <p class="option-description">Divide summary into chapter-based segments</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-xl">
+                <button class="btn btn-primary btn-large" onclick="startProcessing()">
+                    ▶️ Start Processing
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Processing Progress Section (Hidden by default) -->
+    <section class="section hidden" id="processing-section">
+        <div class="container">
+            <h2 class="text-center">⚡ Processing Your Video</h2>
+            
+            <div class="glass-card">
+                <!-- Processing Steps -->
+                <div class="processing-steps" id="processingSteps">
+                    <!-- Will be populated by JavaScript based on workflow -->
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                    <p class="progress-text" id="progressText">Starting...</p>
+                </div>
+
+                <!-- Processing Logs (Optional) -->
+                <div class="mt-lg">
+                    <details>
+                        <summary style="cursor: pointer; font-weight: 600; color: var(--color-text-secondary);">
+                            View Processing Logs
+                        </summary>
+                        <div class="glass-card mt-sm" style="background: var(--color-bg-secondary); max-height: 200px; overflow-y: auto; font-family: monospace; font-size: 0.875rem;">
+                            <div id="processingLogs"></div>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Section (Hidden by default) -->
+    <section class="section hidden" id="results-section">
+        <div class="container">
+            <div class="results-section">
+                <h2 class="text-center">✅ Processing Complete!</h2>
+                <p class="text-center" style="color: var(--color-text-secondary); font-size: 1.125rem;">
+                    Your video has been successfully processed
+                </p>
+
+                <!-- Video Preview -->
+                <div class="video-preview mt-xl">
+                    <video id="resultVideo" controls>
+                        <source src="" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <!-- Processing Summary -->
+                <div class="glass-card mt-xl">
+                    <h3>📊 Processing Summary</h3>
+                    <div id="processingSummary"></div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="results-actions">
+                    <button class="btn btn-primary btn-large" onclick="downloadVideo()">
+                        ⬇️ Download Video
+                    </button>
+                    <button class="btn btn-outline btn-large" onclick="processAnother()">
+                        🔄 Process Another Video
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section (Optional - for marketing) -->
+    <section class="section" id="features">
+        <div class="container">
+            <h2 class="text-center">Powerful Features</h2>
+            <p class="text-center mb-xl" style="color: var(--color-text-secondary); max-width: 700px; margin: 0 auto var(--spacing-xl);">
+                Everything you need to create stunning videos with AI
+            </p>
+
+            <div class="workflow-grid">
+                <div class="glass-card text-center">
+                    <div class="workflow-icon" style="background: linear-gradient(135deg, #06b6d4, #14b8a6);">📝</div>
+                    <h3>Smart Subtitles</h3>
+                    <p>Automatic subtitle generation with precise timing and multi-language support</p>
+                </div>
+
+                <div class="glass-card text-center">
+                    <div class="workflow-icon" style="background: linear-gradient(135deg, #f59e0b, #ef4444);">🎙️</div>
+                    <h3>AI Voice Synthesis</h3>
+                    <p>Natural-sounding text-to-speech with multiple voice options and languages</p>
+                </div>
+
+                <div class="glass-card text-center">
+                    <div class="workflow-icon" style="background: linear-gradient(135deg, #8b5cf6, #d946ef);">✂️</div>
+                    <h3>Smart Editing</h3>
+                    <p>Intelligent video segmentation and clip generation from key moments</p>
+                </div>
+
+                <div class="glass-card text-center">
+                    <div class="workflow-icon" style="background: linear-gradient(135deg, #10b981, #059669);">🌍</div>
+                    <h3>Translation</h3>
+                    <p>Translate your content into 20+ languages for global reach</p>
+                </div>
+
+                <div class="glass-card text-center">
+                    <div class="workflow-icon" style="background: linear-gradient(135deg, #6366f1, #4f46e5);">📊</div>
+                    <h3>Summarization</h3>
+                    <p>AI-powered content analysis to extract key insights and create summaries</p>
+                </div>
+
+                <div class="glass-card text-center">
+                    <div class="workflow-icon" style="background: linear-gradient(135deg, #ec4899, #be185d);">⚡</div>
+                    <h3>Fast Processing</h3>
+                    <p>Optimized pipeline for quick video processing and export</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="padding: var(--spacing-xl) 0; text-align: center; border-top: 1px solid var(--color-border); margin-top: var(--spacing-2xl);">
+        <div class="container">
+            <p style="color: var(--color-text-muted);">
+                Built with ❤️ by the ReelMaker-AI Team
+            </p>
+            <p style="color: var(--color-text-muted); font-size: 0.875rem; margin-top: var(--spacing-xs);">
+                © 2026 ReelMaker-AI. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+{
+  "name": "reelmaker-ai",
+  "version": "1.0.0",
+  "description": "> An AI-powered video processing platform that transforms your videos with intelligent editing, multilingual subtitles, and automated content summarization.",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/touqeerShah/ReelMaker-AI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/touqeerShah/ReelMaker-AI/issues"
+  },
+  "homepage": "https://github.com/touqeerShah/ReelMaker-AI#readme",
+  "dependencies": {
+    "kokoro-js": "^1.2.1"
+  }
+}
